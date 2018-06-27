@@ -5,7 +5,7 @@
   
   <link href="/feed.xml" rel="self" type="application/atom+xml" />
   <link href="/" rel="alternate" type="text/html" />
-  <updated>2018-06-27T10:17:40-05:00</updated>
+  <updated>2018-06-27T11:28:21-05:00</updated>
   <id>//</id>
 
   
@@ -40,14 +40,17 @@ platform that seems to have the above features.&lt;/p&gt;
 &lt;h3 id=&quot;why-github-pages&quot;&gt;Why GitHub pages&lt;/h3&gt;
 
 &lt;p&gt;GitHub provides hosting for static content sites via it’s &lt;a href=&quot;https://pages.github.com/&quot;&gt;GitHub pages&lt;/a&gt;.
-This is really convenient as one does not have to bother setting up a production server and the pages are
-automatically served from a git repository.
+This is really convenient as one does not have to bother setting up a production server and the 
+pages are automatically served from a git repository.
 All you need to do is to push your content into a special repository (more of this below).&lt;/p&gt;
 
 &lt;p&gt;What is neat with &lt;a href=&quot;https://pages.github.com/&quot;&gt;GitHub pages&lt;/a&gt; for &lt;a href=&quot;https://jekyllrb.com/&quot;&gt;Jekyll&lt;/a&gt; is that Jekyll based pages can 
-automatically built by GitHub, meaning that the static content is automatically compiled from the Jekyll source 
-files, such as those Markdown files. However, I ended up not using that neatness due to a missing 
-gem (Ruby library) in the GitHub environment that was required by my custom theme.&lt;/p&gt;
+automatically built by GitHub, meaning that the static content is automatically compiled from 
+the Jekyll source files, such as those Markdown files. 
+Given that GitHub was originally &lt;a href=&quot;http://shayfrendt.com/posts/upgrading-github-to-rails-3-with-zero-downtime/&quot;&gt;built with Ruby On Rails&lt;/a&gt;, the famous Ruby based 
+web-application framework, it’s no wonder that GitHub gave the Ruby based &lt;a href=&quot;https://jekyllrb.com/&quot;&gt;Jekyll&lt;/a&gt; a special support.
+However, I ended up not using that neatness due to a missing gem (Ruby library) in the GitHub 
+environment that was required by my custom theme.&lt;/p&gt;
 
 &lt;h2 id=&quot;setting-up-a-developer-environment&quot;&gt;Setting up a developer environment&lt;/h2&gt;
 
@@ -55,11 +58,18 @@ gem (Ruby library) in the GitHub environment that was required by my custom them
 Jekyll is based on Ruby which needs to be installed if you want to compile your blog from the source
 files. 
 Installing Ruby and learning it’s ecosystem will take some time, so unless you have that ready it is
-probably the easiest to use &lt;a href=&quot;https://docs.docker.com/install/&quot;&gt;Docker&lt;/a&gt; instead.
-Jekyll has an official &lt;a href=&quot;https://hub.docker.com/r/jekyll/jekyll/&quot;&gt;docker image&lt;/a&gt; that has all the needed components installed.
+probably the easiest to use &lt;a href=&quot;https://docs.docker.com/install/&quot;&gt;Docker&lt;/a&gt; instead.&lt;/p&gt;
+
+&lt;p&gt;Jekyll has an official &lt;a href=&quot;https://hub.docker.com/r/jekyll/jekyll/&quot;&gt;docker image&lt;/a&gt; that has all the needed components installed.
 The following instructions will be based on Docker and assumes you have a working Docker installed
 to your computer and you are using linux. If you are using Windows 10, you can either use the bash 
-shell within windows or just modify the commands below.&lt;/p&gt;
+shell within Windows or just modify the commands below.&lt;/p&gt;
+
+&lt;p&gt;The philosophy behind the Docker commands below is that if we had Ruby environment installed locally, 
+we could just run commands like &lt;code class=&quot;highlighter-rouge&quot;&gt;jekyll new&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;bundle install&lt;/code&gt; to build a new blog or install 
+Ruby libraries (called &lt;em&gt;gems&lt;/em&gt;). 
+Now instead we will run such commands with &lt;code class=&quot;highlighter-rouge&quot;&gt;docker run&lt;/code&gt; through the container that has the 
+Ruby environment installed.&lt;/p&gt;
 
 &lt;h3 id=&quot;creating-the-initial-jekyll-source-files-with-docker&quot;&gt;Creating the initial jekyll source files with Docker&lt;/h3&gt;
 
@@ -79,6 +89,16 @@ To start, first create a folder for the blog, e.g. &lt;code class=&quot;highligh
 blog files with &lt;code class=&quot;highlighter-rouge&quot;&gt;jekyll new&lt;/code&gt;. 
 The source files should now appear in your &lt;code class=&quot;highlighter-rouge&quot;&gt;blog&lt;/code&gt; folder.
 Additional info about the command used above can be found from &lt;a href=&quot;https://github.com/jlintusaari/local-jekyll-docker&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;It may be beneficial to open an interactive shell to the container to test the different commands, 
+for instance to open an interactive bash shell type:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker run --rm --volume=&quot;$PWD/blog:/srv/jekyll&quot; -it jekyll/jekyll:3.8 \
+  bash
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now you can check the options for &lt;code class=&quot;highlighter-rouge&quot;&gt;jekyll new&lt;/code&gt; with &lt;code class=&quot;highlighter-rouge&quot;&gt;jekyll new --help&lt;/code&gt; (note that in the first time
+it will install bunch of gems).&lt;/p&gt;
 
 &lt;p&gt;Some files that we will be needing are &lt;code class=&quot;highlighter-rouge&quot;&gt;Gemfile&lt;/code&gt; which lists the gems (Ruby libraries) that your project will
 use and &lt;code class=&quot;highlighter-rouge&quot;&gt;_config.yml&lt;/code&gt; which is the Jekyll site configuration file.&lt;/p&gt;
@@ -106,7 +126,8 @@ Exceptions are the files &lt;code class=&quot;highlighter-rouge&quot;&gt;_config
 &lt;h3 id=&quot;speeding-up-the-starting-of-the-server&quot;&gt;Speeding up the starting of the server&lt;/h3&gt;
 
 &lt;p&gt;The above process always reinstalls the needed gems to the container based on the official image. 
-A more efficient way is to first create an image that has the needed gems and then use that gem. 
+A more efficient way is to first create an image that has the needed gems and then use that image.
+This will actually speed up all the other commands too. 
 Assuming we are in the &lt;code class=&quot;highlighter-rouge&quot;&gt;blog&lt;/code&gt; folder, type:&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker run --name blog_server --volume=&quot;$PWD:/srv/jekyll&quot; -it jekyll/jekyll:3.8 \
@@ -208,9 +229,11 @@ folder. After committing and pushing you should see your blog appearing at
       
         <category term="coding" />
       
-        <category term="jekyll" />
+        <category term="Jekyll" />
       
         <category term="GitHub" />
+      
+        <category term="Docker" />
       
         <category term="blog" />
       
