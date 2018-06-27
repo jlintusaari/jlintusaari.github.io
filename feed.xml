@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <generator uri="http://jekyllrb.com" version="3.8.3">Jekyll</generator>
+  
+  
+  <link href="/feed.xml" rel="self" type="application/atom+xml" />
+  <link href="/" rel="alternate" type="text/html" />
+  <updated>2018-06-27T10:17:40-05:00</updated>
+  <id>//</id>
+
+  
+    <title type="html">Jarno’s blog</title>
+  
+
+  
+    <subtitle>This blog features coding and machine learning related free-time projects.</subtitle>
+  
+
+  
+
+  
+  
+    <entry>
+      
+      <title type="html">Making a GitHub hosted Jekyll blog with a custom theme</title>
+      
+      
+      <link href="/2018/03/github-hosted-jekyll-blog-custom-theme/" rel="alternate" type="text/html" title="Making a GitHub hosted Jekyll blog with a custom theme" />
+      
+      <published>2018-03-28T14:37:55-05:00</published>
+      <updated>2018-03-28T14:37:55-05:00</updated>
+      <id>/2018/03/github-hosted-jekyll-blog-custom-theme</id>
+      <content type="html" xml:base="/2018/03/github-hosted-jekyll-blog-custom-theme/">&lt;p&gt;I have been thinking of making a blog for a while.
+I wanted to find a blogging platform that was simple, customizable, static content based so that I 
+could host it in &lt;a href=&quot;https://pages.github.com/&quot;&gt;GitHub pages&lt;/a&gt;, and supported Markdown so that I could easily publish 
+code projects from Jupyter notebooks and R’s &lt;a href=&quot;https://yihui.name/knitr/&quot;&gt;knitr&lt;/a&gt;.
+After a bit of searching I decided to go forward with &lt;a href=&quot;https://jekyllrb.com/&quot;&gt;Jekyll&lt;/a&gt; which is a Ruby based blogging 
+platform that seems to have the above features.&lt;/p&gt;
+
+&lt;h3 id=&quot;why-github-pages&quot;&gt;Why GitHub pages&lt;/h3&gt;
+
+&lt;p&gt;GitHub provides hosting for static content sites via it’s &lt;a href=&quot;https://pages.github.com/&quot;&gt;GitHub pages&lt;/a&gt;.
+This is really convenient as one does not have to bother setting up a production server and the pages are
+automatically served from a git repository.
+All you need to do is to push your content into a special repository (more of this below).&lt;/p&gt;
+
+&lt;p&gt;What is neat with &lt;a href=&quot;https://pages.github.com/&quot;&gt;GitHub pages&lt;/a&gt; for &lt;a href=&quot;https://jekyllrb.com/&quot;&gt;Jekyll&lt;/a&gt; is that Jekyll based pages can 
+automatically built by GitHub, meaning that the static content is automatically compiled from the Jekyll source 
+files, such as those Markdown files. However, I ended up not using that neatness due to a missing 
+gem (Ruby library) in the GitHub environment that was required by my custom theme.&lt;/p&gt;
+
+&lt;h2 id=&quot;setting-up-a-developer-environment&quot;&gt;Setting up a developer environment&lt;/h2&gt;
+
+&lt;p&gt;It’s essential to be able to test your site in your local computer.
+Jekyll is based on Ruby which needs to be installed if you want to compile your blog from the source
+files. 
+Installing Ruby and learning it’s ecosystem will take some time, so unless you have that ready it is
+probably the easiest to use &lt;a href=&quot;https://docs.docker.com/install/&quot;&gt;Docker&lt;/a&gt; instead.
+Jekyll has an official &lt;a href=&quot;https://hub.docker.com/r/jekyll/jekyll/&quot;&gt;docker image&lt;/a&gt; that has all the needed components installed.
+The following instructions will be based on Docker and assumes you have a working Docker installed
+to your computer and you are using linux. If you are using Windows 10, you can either use the bash 
+shell within windows or just modify the commands below.&lt;/p&gt;
+
+&lt;h3 id=&quot;creating-the-initial-jekyll-source-files-with-docker&quot;&gt;Creating the initial jekyll source files with Docker&lt;/h3&gt;
+
+&lt;p&gt;We will use the official &lt;a href=&quot;https://hub.docker.com/r/jekyll/jekyll/&quot;&gt;Jekyll Docker image&lt;/a&gt; to build the initial source files for
+the blog. 
+You can find the files created in this section from &lt;a href=&quot;https://github.com/jlintusaari/local-jekyll-docker&quot;&gt;this repository&lt;/a&gt; that I created.
+To start, first create a folder for the blog, e.g. &lt;code class=&quot;highlighter-rouge&quot;&gt;mkdir blog&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;The initial Jekyll blog files can now be created into the &lt;code class=&quot;highlighter-rouge&quot;&gt;blog&lt;/code&gt; folder with 
+&lt;a href=&quot;https://hub.docker.com/r/jekyll/jekyll/&quot;&gt;Jekyll Docker image&lt;/a&gt; (I used &lt;code class=&quot;highlighter-rouge&quot;&gt;jekyll/jekyll:3.8&lt;/code&gt;) by running:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker run --rm --volume=&quot;$PWD/blog:/srv/jekyll&quot; -it jekyll/jekyll:3.8 \
+  jekyll new . --skip-bundle
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The command mounted your &lt;code class=&quot;highlighter-rouge&quot;&gt;blog&lt;/code&gt; directory to &lt;code class=&quot;highlighter-rouge&quot;&gt;/srv/jekyll&lt;/code&gt; in the container and then created the 
+blog files with &lt;code class=&quot;highlighter-rouge&quot;&gt;jekyll new&lt;/code&gt;. 
+The source files should now appear in your &lt;code class=&quot;highlighter-rouge&quot;&gt;blog&lt;/code&gt; folder.
+Additional info about the command used above can be found from &lt;a href=&quot;https://github.com/jlintusaari/local-jekyll-docker&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Some files that we will be needing are &lt;code class=&quot;highlighter-rouge&quot;&gt;Gemfile&lt;/code&gt; which lists the gems (Ruby libraries) that your project will
+use and &lt;code class=&quot;highlighter-rouge&quot;&gt;_config.yml&lt;/code&gt; which is the Jekyll site configuration file.&lt;/p&gt;
+
+&lt;h3 id=&quot;running-the-server-locally-with-docker&quot;&gt;Running the server locally with Docker&lt;/h3&gt;
+
+&lt;p&gt;The fastest way to run the server is to change directory to the &lt;code class=&quot;highlighter-rouge&quot;&gt;blog&lt;/code&gt; folder 
+(that contains the source files) and type:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker run --rm --volume=&quot;$PWD:/srv/jekyll&quot; -p 4000:4000 -it jekyll/jekyll:3.8 \
+  bash -c &quot;bundle install &amp;amp;&amp;amp; bundle exec jekyll serve -H 0.0.0.0&quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;You should see information about the server staring. If not, make sure you are in the same folder
+where you have the source files created above (the &lt;code class=&quot;highlighter-rouge&quot;&gt;blog&lt;/code&gt; folder in this example).
+Now you should have your blog running in &lt;code class=&quot;highlighter-rouge&quot;&gt;localhost:4000&lt;/code&gt; so go ahead and type that to your
+browser’s address bar to test. 
+Details of the arguments to &lt;code class=&quot;highlighter-rouge&quot;&gt;docker run&lt;/code&gt; can be found from &lt;a href=&quot;https://github.com/jlintusaari/local-jekyll-docker&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;While the server is running you can edit the different files to see their effect. 
+For instance you can modify the &lt;code class=&quot;highlighter-rouge&quot;&gt;about.md&lt;/code&gt; file and see how the About page is changed after you
+save the changes.
+Exceptions are the files &lt;code class=&quot;highlighter-rouge&quot;&gt;_config.yml&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;Gemfile&lt;/code&gt; that require restarting the server.&lt;/p&gt;
+
+&lt;h3 id=&quot;speeding-up-the-starting-of-the-server&quot;&gt;Speeding up the starting of the server&lt;/h3&gt;
+
+&lt;p&gt;The above process always reinstalls the needed gems to the container based on the official image. 
+A more efficient way is to first create an image that has the needed gems and then use that gem. 
+Assuming we are in the &lt;code class=&quot;highlighter-rouge&quot;&gt;blog&lt;/code&gt; folder, type:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker run --name blog_server --volume=&quot;$PWD:/srv/jekyll&quot; -it jekyll/jekyll:3.8 \
+  bundle install
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Notice that we removed the &lt;code class=&quot;highlighter-rouge&quot;&gt;--rm&lt;/code&gt; argument which would remove the container after execution. Instead 
+we added &lt;code class=&quot;highlighter-rouge&quot;&gt;--name&lt;/code&gt; to give the container a name &lt;code class=&quot;highlighter-rouge&quot;&gt;blog_server&lt;/code&gt;. Now typing &lt;code class=&quot;highlighter-rouge&quot;&gt;docker ps -a&lt;/code&gt; 
+should show you a container with that name. It has all the gems installed
+and the final step is to make an image of it with &lt;code class=&quot;highlighter-rouge&quot;&gt;docker commit&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker commit blog_server blog_server
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now we have an image called &lt;code class=&quot;highlighter-rouge&quot;&gt;blog_server&lt;/code&gt; that is based on the official image and has all the needed 
+gems installed. 
+You can see this image listed by typing &lt;code class=&quot;highlighter-rouge&quot;&gt;docker images&lt;/code&gt;. 
+The server can now be ran using our new image with&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker run --rm --volume=&quot;$PWD:/srv/jekyll&quot; -p 4000:4000 -it blog_server \
+  bundle exec jekyll serve -H 0.0.0.0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;You will notice that server starts in an instant. 
+As long as you keep the image in your computer you can use it to serve the blog. 
+If you at some point update your bundle (Gemfile) you can recreate the image with the steps above.&lt;/p&gt;
+
+&lt;h2 id=&quot;customizing-the-blog&quot;&gt;Customizing the blog&lt;/h2&gt;
+
+&lt;p&gt;The first thing in customizing the blog is to choose a theme.
+If you are planning to host in GitHub with automatic compilation, you can choose the theme from 
+multiple &lt;a href=&quot;https://pages.github.com/themes/&quot;&gt;options&lt;/a&gt; or even use custom themes via the 
+&lt;a href=&quot;https://github.com/benbalter/jekyll-remote-theme&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;jekyll-remote-theme&lt;/code&gt;&lt;/a&gt; gem.
+To test locally you need to replicate the GitHub Ruby environment.
+Luckily GitHub makes this really easy, you just need to have&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;gem &quot;github-pages&quot;, group: :jekyll_plugins
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;in your &lt;code class=&quot;highlighter-rouge&quot;&gt;Gemfile&lt;/code&gt; and remove the &lt;code class=&quot;highlighter-rouge&quot;&gt;gem &quot;jekyll&quot;&lt;/code&gt; line. 
+This will install all the gems in your local environment that are provided at GitHub.&lt;/p&gt;
+
+&lt;p&gt;I had already chosen a &lt;a href=&quot;https://github.com/yous/whiteglass&quot;&gt;theme&lt;/a&gt; that was not in the list of GitHub supported themes and 
+unfortunately depended on a gem called &lt;code class=&quot;highlighter-rouge&quot;&gt;jekyll-archives&lt;/code&gt; that was not available in the GitHub Ruby 
+environment.
+This caused the post tags to silently disappear from the posts in compilation (luckily I noticed it).
+I figured the safest and easiest way forward at this stage would be to just build the pages locally, 
+and push the compiled static pages to GitHub.
+That way I wouldn’t have to worry about what’s available in the GitHub Ruby environment and what’s 
+not.
+Of course this means more manual work for me, but not that much.&lt;/p&gt;
+
+&lt;p&gt;I followed the &lt;a href=&quot;https://github.com/yous/whiteglass#quick-start&quot;&gt;quick start instructions&lt;/a&gt; of the theme to edit
+my source files.&lt;/p&gt;
+
+&lt;h2 id=&quot;hosting-in-github&quot;&gt;Hosting in GitHub&lt;/h2&gt;
+
+&lt;p&gt;The last step is to have GitHub host the compiled pages. GitHub has made this really 
+&lt;a href=&quot;https://pages.github.com/&quot;&gt;simple&lt;/a&gt;. 
+You only need to create a git repository with a special name &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;username&amp;gt;.github.io&lt;/code&gt; and all the 
+static content you push to it’s &lt;code class=&quot;highlighter-rouge&quot;&gt;master&lt;/code&gt; branch will be available at 
+&lt;code class=&quot;highlighter-rouge&quot;&gt;https://&amp;lt;username&amp;gt;.github.com&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;A small nuisance in my case is that I need to manually compile the pages and then push the compiled 
+pages to GitHub. 
+To compile the pages with Docker one can either:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker run --volume=&quot;$PWD:/srv/jekyll&quot; -it jekyll/jekyll:3.8 \
+  jekyll build
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;or use the &lt;code class=&quot;highlighter-rouge&quot;&gt;blog_server&lt;/code&gt; image created above&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker run --volume=&quot;$PWD:/srv/jekyll&quot; -it blog_server \
+  jekyll build
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The compiled pages are now found from the &lt;code class=&quot;highlighter-rouge&quot;&gt;_site&lt;/code&gt; folder. 
+The contents of this folder need to be committed to the master branch of the &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;username&amp;gt;.github.io&lt;/code&gt; 
+repository and pushed.&lt;/p&gt;
+
+&lt;p&gt;To automate this I slightly modified the build command to place the files directly to the 
+local clone of the &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;username&amp;gt;.github.io&lt;/code&gt; repository:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker run -v=&quot;$PWD:/srv/jekyll&quot; -v=&quot;path/to/github_repo:/srv/site&quot; -it blog_server \
+  jekyll build -d /srv/site
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now the compiled static files are automatically placed to the local &lt;code class=&quot;highlighter-rouge&quot;&gt;path/to/github_repo&lt;/code&gt; 
+folder. After committing and pushing you should see your blog appearing at 
+&lt;code class=&quot;highlighter-rouge&quot;&gt;https://&amp;lt;username&amp;gt;.github.com&lt;/code&gt;.&lt;/p&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+
+      
+        <category term="coding" />
+      
+        <category term="jekyll" />
+      
+        <category term="GitHub" />
+      
+        <category term="blog" />
+      
+
+      
+
+      
+        <summary type="html">I have been thinking of making a blog for a while. I wanted to find a blogging platform that was simple, customizable, static content based so that I could host it in GitHub pages, and supported Markdown so that I could easily publish code projects from Jupyter notebooks and R’s knitr. After a bit of searching I decided to go forward with Jekyll which is a Ruby based blogging platform that seems to have the above features.</summary>
+      
+
+      
+      
+    </entry>
+  
+  
+</feed>
