@@ -5,7 +5,7 @@
   
   <link href="/feed.xml" rel="self" type="application/atom+xml" />
   <link href="/" rel="alternate" type="text/html" />
-  <updated>2018-06-27T15:33:49-05:00</updated>
+  <updated>2018-06-27T15:41:51-05:00</updated>
   <id>//</id>
 
   
@@ -22,10 +22,10 @@
   
     <entry>
       
-      <title type="html">Building a Boggle solver from scratch with Keras</title>
+      <title type="html">Building a Boggle solver from scratch using Keras</title>
       
       
-      <link href="/2018/06/building-boggle-solver/" rel="alternate" type="text/html" title="Building a Boggle solver from scratch with Keras" />
+      <link href="/2018/06/building-boggle-solver/" rel="alternate" type="text/html" title="Building a Boggle solver from scratch using Keras" />
       
       <published>2018-06-27T00:00:00-05:00</published>
       <updated>2018-06-27T00:00:00-05:00</updated>
@@ -33,14 +33,14 @@
       <content type="html" xml:base="/2018/06/building-boggle-solver/">&lt;p&gt;Boggle is a classical word searching game in a 4 x 4 grid of letter dice.
 The winner is determined based on the number and length of words found from the board.
 We quite often play this game with my family when we visit my parents. 
-The inspiration for this project came from interest in knowing all the possible words that exist in
+The inspiration for this project came from an interest in knowing all the possible words in
 a given board.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/img/boggle/boggle.jpg&quot; alt=&quot;A finnish boggle board&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;So I decided to write a program that automates the process of finding the words from the game board.
-To make it as easy as possible for the user, one only has to take a picture of the boggle board and
-the program will return all the words in it given a dictionary.&lt;/p&gt;
+To make the program as easy to use as possible, one only has to take a picture of the boggle board and
+the program will return all the words in it.&lt;/p&gt;
 
 &lt;h2 id=&quot;sub-problems-to-solve&quot;&gt;Sub problems to solve&lt;/h2&gt;
 
@@ -230,8 +230,9 @@ provided black and white images.&lt;/p&gt;
 
 &lt;p&gt;The classifier can be tried online &lt;a href=&quot;kevea.fi:8000&quot;&gt;here&lt;/a&gt;. 
 The web interface is still in progress so please bear with it for now.
-Due to the implementation, the program is going to work only with images taken from a board that
-is similar to the board in the very beginning of this post.&lt;/p&gt;</content>
+The program is going to work only with images that are taken from a board that is similar to the 
+board in the very beginning of this post.
+And the words found will be in finnish due to the use of a finnish dictionary file ;)&lt;/p&gt;</content>
 
       
       
@@ -252,7 +253,7 @@ is similar to the board in the very beginning of this post.&lt;/p&gt;</content>
       
 
       
-        <summary type="html">Boggle is a classical word searching game in a 4 x 4 grid of letter dice. The winner is determined based on the number and length of words found from the board. We quite often play this game with my family when we visit my parents. The inspiration for this project came from interest in knowing all the possible words that exist in a given board.</summary>
+        <summary type="html">Boggle is a classical word searching game in a 4 x 4 grid of letter dice. The winner is determined based on the number and length of words found from the board. We quite often play this game with my family when we visit my parents. The inspiration for this project came from an interest in knowing all the possible words in a given board.</summary>
       
 
       

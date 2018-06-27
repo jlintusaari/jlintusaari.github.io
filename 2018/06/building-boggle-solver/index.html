@@ -9,8 +9,8 @@
   
   
   
-  <title>Building a Boggle solver from scratch with Keras</title>
-  <meta name="description" content="Boggle is a classical word searching game in a 4 x 4 grid of letter dice. The winner is determined based on the number and length of words found from the board. We quite often play this game with my family when we visit my parents. The inspiration for this project came from interest in knowing all the possible words that exist in a given board.">
+  <title>Building a Boggle solver from scratch using Keras</title>
+  <meta name="description" content="Boggle is a classical word searching game in a 4 x 4 grid of letter dice. The winner is determined based on the number and length of words found from the board. We quite often play this game with my family when we visit my parents. The inspiration for this project came from an interest in knowing all the possible words in a given board.">
   
     
     <meta name="keywords" content="Machine Learning, Boggle, Image processing, Keras">
@@ -27,7 +27,7 @@
   
   <meta name="twitter:card" content="summary">
   <meta name="twitter:site" content="jlintusaari">
-  <meta name="twitter:title" content="Building a Boggle solver from scratch with Keras">
+  <meta name="twitter:title" content="Building a Boggle solver from scratch using Keras">
   <meta name="twitter:description" content="Boggle is a classical word searching game in a 4 x 4 grid of letter dice. The winner is determined based on the number and length of words found from the board. We quite often play this game with m...">
   
     <meta name="twitter:creator" content="jlintusaari">
@@ -83,7 +83,7 @@
 
   <header class="post-header">
     
-      <h1 class="post-title" itemprop="name headline">Building a Boggle solver from scratch with Keras</h1>
+      <h1 class="post-title" itemprop="name headline">Building a Boggle solver from scratch using Keras</h1>
     
     <p class="post-meta"><time datetime="2018-06-27T00:00:00-05:00" itemprop="datePublished">Jun 27, 2018</time> •
   
@@ -154,14 +154,14 @@
     <p>Boggle is a classical word searching game in a 4 x 4 grid of letter dice.
 The winner is determined based on the number and length of words found from the board.
 We quite often play this game with my family when we visit my parents. 
-The inspiration for this project came from interest in knowing all the possible words that exist in
+The inspiration for this project came from an interest in knowing all the possible words in
 a given board.</p>
 
 <p><img src="/img/boggle/boggle.jpg" alt="A finnish boggle board" /></p>
 
 <p>So I decided to write a program that automates the process of finding the words from the game board.
-To make it as easy as possible for the user, one only has to take a picture of the boggle board and
-the program will return all the words in it given a dictionary.</p>
+To make the program as easy to use as possible, one only has to take a picture of the boggle board and
+the program will return all the words in it.</p>
 
 <h2 id="sub-problems-to-solve">Sub problems to solve</h2>
 
@@ -351,8 +351,9 @@ provided black and white images.</p>
 
 <p>The classifier can be tried online <a href="kevea.fi:8000">here</a>. 
 The web interface is still in progress so please bear with it for now.
-Due to the implementation, the program is going to work only with images taken from a board that
-is similar to the board in the very beginning of this post.</p>
+The program is going to work only with images that are taken from a board that is similar to the 
+board in the very beginning of this post.
+And the words found will be in finnish due to the use of a finnish dictionary file ;)</p>
 
   </div>
 
