@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
-<loc>/2018/03/github-hosted-jekyll-blog-custom-theme/</loc>
-<lastmod>2018-03-28T14:37:55-05:00</lastmod>
+<loc>/2018/06/github-hosted-jekyll-blog-custom-theme/</loc>
+<lastmod>2018-06-13T00:00:00-05:00</lastmod>
+</url>
+<url>
+<loc>/2018/06/building-boggle-solver/</loc>
+<lastmod>2018-06-27T00:00:00-05:00</lastmod>
 </url>
 <url>
 <loc>/404/</loc>
@@ -17,9 +21,6 @@
 <loc>/</loc>
 </url>
 <url>
-<loc>/categories/coding/</loc>
-</url>
-<url>
 <loc>/categories/jekyll/</loc>
 </url>
 <url>
@@ -30,5 +31,14 @@
 </url>
 <url>
 <loc>/categories/blog/</loc>
+</url>
+<url>
+<loc>/categories/machine-learning/</loc>
+</url>
+<url>
+<loc>/categories/keras/</loc>
+</url>
+<url>
+<loc>/categories/image-processing/</loc>
 </url>
 </urlset>

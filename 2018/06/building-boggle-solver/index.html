@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  
+  
+  <title>Building a Boggle solver from scratch with Keras</title>
+  <meta name="description" content="Boggle is a classical word searching game in a 4 x 4 grid of letter dice. The winner is determined based on the number and length of words found from the board. We quite often play this game with my family when we visit my parents. The inspiration for this project came from interest in knowing all the possible words that exist in a given board.">
+  
+    
+    <meta name="keywords" content="Machine Learning, Boggle, Image processing, Keras">
+  
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="/2018/06/building-boggle-solver/">
+  
+  
+  <link rel="alternate" type="application/rss+xml" title="Jarno&#39;s blog" href="/feed.xml">
+
+  
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="jlintusaari">
+  <meta name="twitter:title" content="Building a Boggle solver from scratch with Keras">
+  <meta name="twitter:description" content="Boggle is a classical word searching game in a 4 x 4 grid of letter dice. The winner is determined based on the number and length of words found from the board. We quite often play this game with m...">
+  
+    <meta name="twitter:creator" content="jlintusaari">
+  
+  
+
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css?family=Bitter:400,400i,700" rel="stylesheet">
+
+  
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-121379633-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">Jarno&#39;s blog</a>
+
+    <nav class="site-nav">
+      
+        
+        <a class="page-link" href="/archives/">Archives</a>
+      
+        
+        <a class="page-link" href="/about/">About</a>
+      
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    
+      <h1 class="post-title" itemprop="name headline">Building a Boggle solver from scratch with Keras</h1>
+    
+    <p class="post-meta"><time datetime="2018-06-27T00:00:00-05:00" itemprop="datePublished">Jun 27, 2018</time> •
+  
+    
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        <a href="/categories/machine-learning/">Machine Learning</a>,
+      
+    
+      
+    
+      
+    
+  
+    
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        <a href="/categories/keras/">Keras</a>,
+      
+    
+      
+    
+  
+    
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        <a href="/categories/image-processing/">Image processing</a>
+      
+    
+  
+
+
+
+</p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>Boggle is a classical word searching game in a 4 x 4 grid of letter dice.
+The winner is determined based on the number and length of words found from the board.
+We quite often play this game with my family when we visit my parents. 
+The inspiration for this project came from interest in knowing all the possible words that exist in
+a given board.</p>
+
+<p><img src="/img/boggle/boggle.jpg" alt="A finnish boggle board" /></p>
+
+<p>So I decided to write a program that automates the process of finding the words from the game board.
+To make it as easy as possible for the user, one only has to take a picture of the boggle board and
+the program will return all the words in it given a dictionary.</p>
+
+<h2 id="sub-problems-to-solve">Sub problems to solve</h2>
+
+<p>There are two main tasks:</p>
+
+<ul>
+  <li>Read the boggle board letters from an image</li>
+  <li>Find all the words</li>
+</ul>
+
+<p>For the latter task, there exists pre-made solutions in GitHub (see e.g. <a href="https://github.com/railto/boggle-solver">here</a>). 
+This article considers the first task.</p>
+
+<p>The biggest problem was to acquire a decent dataset. 
+I did not have very many images of boggle boards to train a machine learning algorithm with. 
+I had decided to implement an artificial neural network (ANN), and those tend to require 
+a lot of labeled training data.</p>
+
+<p>I first thought of rendering boggle board images with a computer but came into a conclusion that 
+making the renderer would take too much time. 
+I decided to take a few photos of the board and use them to generate more images for training.
+So next time I visited my parents, I took eight images of our game board with all the 
+different die faces visible.</p>
+
+<h2 id="locating-the-board">Locating the board</h2>
+
+<p>Given the shortage of training data, I decided to use traditional image processing techniques to 
+first locate the board in the image. 
+Once located, it would be easy to extract the individual letter images from it.
+Then I would only need to train an ANN classifier to classify the letter in the dice.</p>
+
+<p>I had not done image processing before but found a blog entry describing <a href="http://sudokugrab.blogspot.fi/2009/07/how-does-it-all-work.html">Sudoku grab</a>
+quite useful. 
+After some experimentation I arrived at the following approach for locating the Boggle board from an 
+image:</p>
+
+<ol>
+  <li>Assume an image with a boggle board (possibly with some other objects or noise, e.g. a hand)</li>
+  <li>Threshold the image to find all whitish blobs in it since the dice have a white background</li>
+  <li>Do outlier detection to determine what blobs are actually dice among
+all the white blobs. Remove the others.</li>
+  <li>Dilate the blobs until there is just one blob</li>
+  <li>This blob should now be basically the board. Find the minimal enclosing rectangle.</li>
+  <li>Do a pespective transform to get the image of the board in upright position.</li>
+  <li>Remove the board gaps between letters</li>
+</ol>
+
+<p>Below is an example of the results after each step above:</p>
+
+<p><img src="/img/boggle/board-capturing_9_0.png" alt="Image processing steps" /></p>
+
+<p>The outlier detection in step three worked surprisingly well. 
+I added it after I noticed that the thresholding alone was too unreliable, even with some additional 
+tricks. 
+The image had to basically contain just the Boggle board and not much else. 
+With the outlier detection, however, even having a hand in the picture and some light reflection 
+didn’t confuse the program. 
+I used three features for the detection, the size of the blob, the blob location and the minimum 
+bounding rectangle width in proportion to its height.</p>
+
+<p>After extracting the features I take the 24 largest white blobs from the image, 
+and assume 16 of them are dice (as there are 16 dice). 
+The remaining eight blobs are “outliers” to be removed, e.g. white sheet of paper next to the game board.
+As the 16 dice that should have very similar feature values, the other whitish objects in the image 
+should be deemed as outliers and be discarded. 
+The outlier detection algorithm I used was the <a href="http://scikit-learn.org/stable/modules/generated/sklearn.covariance.EllipticEnvelope.html"><code class="highlighter-rouge">EllipticEnvelope</code></a> 
+from <a href="http://scikit-learn.org/stable/index.html">scikit-learn</a>.</p>
+
+<p>Below is another illustration of the process for another image:</p>
+
+<p><img src="/img/boggle/board-capturing_7_0.png" alt="" /></p>
+
+<p>This process is not perfect in that it requires the image is taken quite directly from above the 
+board. 
+I does make errors occasionally since e.g. thresholding is error prone in bad lighting conditions. 
+This however was sufficient for me for now. 
+The implementation so far was done with <code class="highlighter-rouge">scipy.ndimage</code>, <code class="highlighter-rouge">open-cv</code> and <code class="highlighter-rouge">numpy</code> Python libraries.</p>
+
+<h2 id="generating-a-training-dataset">Generating a training dataset</h2>
+
+<p>I had decided to use artificial neural networks (ANN) as the method for classifying the dice letters.
+I first tried to find ready made letter datasets, but gave up after realizing that they were all for 
+the english alphabet and I would have to anyway add e.g. Ö, Ä and FG and BC from the finnish Boggle 
+version.</p>
+
+<p><img src="/img/boggle/accented.jpg" alt="Finnish boggle dice" style="width: 200px;" /></p>
+
+<p>I used six out of the eight images I had taken of the board to train the classifier with 
+(a total of 6 * 16 = 96 letters, all the different sides of the dice). 
+I labeled them, made a script that made blurred and sharpened version of those 6 images to bring my 
+labeled dataset size to 96 * 3 = 288 images of Boggle letters.</p>
+
+<p>I decided to cast the dice images to black and white 64 x 64 pixel images.
+After this I made a function that would add random noise (salt and pepper), shifts and rotations to 
+a letter image. 
+Below you can see some of the original 288 black and white letter images and the result of the 
+noising on the right.</p>
+
+<p><img src="/img/boggle/creating-dataset_8_0.png" alt="Preprocessed letter images" style="width: 300px;" />
+<img src="/img/boggle/creating-dataset_11_0.png" alt="Preprocessed and noised letter images" style="width: 300px;" /></p>
+
+<p>Because the distribution of the letters was not uniform (e.g. there are many more A:s compared to 
+e.g. Y:s) I had to sample them with weights so that the probability of each letter appearing was the 
+same. 
+Otherwise my classifier would easily become biased towards common letters.</p>
+
+<p>I was now ready to train the ANN with sort of an unlimited supply of training letter images.
+Due to the very small initial set of images there was a high risk of bias.
+This was however reduced with the black and white transforms and the different distortions applied.</p>
+
+<h2 id="training-the-ann">Training the ANN</h2>
+
+<p>I decided to use <a href="https://keras.io/">Keras</a> with the <a href="https://www.tensorflow.org/">TensorFlow</a> backend. 
+I decided to start with the basic one hidden layer setup with relu activation and a softmax loss. 
+Because the training data are rather heavily preprocessed black and white images of letters, I 
+anticipated that this ANN structure would already yield a decent performance.</p>
+
+<p>I ended up using the setup below, with the hidden layer size of 192.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="n">model</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Sequential</span><span class="p">([</span>
+    <span class="n">Dense</span><span class="p">(</span><span class="mi">192</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">64</span><span class="o">*</span><span class="mi">64</span><span class="p">,),</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">),</span>
+    <span class="n">Dense</span><span class="p">(</span><span class="mi">22</span><span class="p">),</span>
+    <span class="n">Activation</span><span class="p">(</span><span class="s">'softmax'</span><span class="p">)</span>
+<span class="p">])</span>
+
+<span class="n">opt</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">optimizers</span><span class="o">.</span><span class="n">SGD</span><span class="p">(</span><span class="n">lr</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+
+<span class="n">model</span><span class="o">.</span><span class="nb">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s">'categorical_crossentropy'</span><span class="p">,</span>
+              <span class="n">optimizer</span><span class="o">=</span><span class="s">'sgd'</span><span class="p">,</span>
+              <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s">'accuracy'</span><span class="p">])</span>
+
+</code></pre></div></div>
+
+<p>I used random batches of 1000 distorted letters from the original 288 letters training set to train 
+the classifier.
+Using the original 288 letters training set (without distortions) as a validation set I was already 
+over 80% in accuracy after some tens of thousands of iterations. 
+After a few hundred thousands more I reached 100% accuracy, i.e. my model at least had nicely 
+(over)fitted to the original training dataset.</p>
+
+<p><img src="/img/boggle/training-classifier_17_0.png" alt="28 original images" style="width: 300px; float: right;" /></p>
+
+<p>I then took a look at the ANN hidden layer weights which seemed to had formed rather reasonable 
+looking shapes for detecting letters. 
+You can see the 192 hidden node weight visualizations on the right arranged such that there are four 
+feature maps (nodes) on each row.</p>
+
+<p>I then tried classifying a batch of 1000 randomly noised images.
+With that the accuracy was around 98%, i.e. around 20 misclassified letters per a sample of 1000 
+randomly distorted letters.
+Not very good.</p>
+
+<p>I decided to let it train 32M letters overnight (using CPU only here) and see if the accuracy would 
+improve. 
+On the next morning the performance was mostly 100% percent with batches of 1000 randomly noised
+letter images. 
+Since the perfomance could not really be meaningfully improved, I decided not to develop the model 
+further with e.g. adding convolutional layers.</p>
+
+<h3 id="examples-of-missclassifications">Examples of missclassifications</h3>
+
+<p>Below are a couple of examples of misclassified randomly noised images. 
+The first one was classified as “S” while it should have been an “M” and the second one was 
+classified as “A” but should have been an “Ä”. 
+You can’t blame the ANN from the second one though: the random shift pushed the dots outside of the 
+image.</p>
+
+<p><img src="/img/boggle/training-classifier_21_1.png" alt="A missclassified letter" />
+<img src="/img/boggle/training-classifier_23_1.png" alt="A missclassifier letter" /></p>
+
+<h2 id="test-set">Test set</h2>
+
+<p>I had left out two images from the training set to serve as a test set. 
+So I had a total of 2 * 16 = 32 images of letters for the test set. 
+That would have to do.</p>
+
+<p>Evaluating the model with those 32 before unseen images I got a 100% accuracy with a loss of 5.6e-6.</p>
+
+<p>Later when trying the classifier out in real life I had to tune the thresholds in the image 
+processing part a bit to make it more robust against lighting differences (the original eight images 
+were taken in similar lighting which introduced bias to the sample).
+This affected to the program’s ability to locate the board properly and the ability to transform 
+the color letter images to black and white images.
+However the ANN classifier did not undergo any changes and performed surprisingly well with the 
+provided black and white images.</p>
+
+<p>The classifier can be tried online <a href="kevea.fi:8000">here</a>. 
+The web interface is still in progress so please bear with it for now.
+Due to the implementation, the program is going to work only with images taken from a board that
+is similar to the board in the very beginning of this post.</p>
+
+  </div>
+
+  
+
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <p>
+      
+
+&copy;  - Powered by <a href="https://jekyllrb.com">Jekyll</a> &amp; <a href="https://github.com/yous/whiteglass">whiteglass</a> - Subscribe via <a href="/feed.xml">RSS</a>
+
+    </p>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>
