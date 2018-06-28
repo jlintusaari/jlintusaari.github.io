@@ -10,7 +10,7 @@
   
   
   <title>Building a Boggle solver from scratch using Keras</title>
-  <meta name="description" content="Boggle is a classical word searching game in a 4 x 4 grid of letter dice. The winner is determined based on the number and length of words found from the board. We quite often play this game with my family when we visit my parents. The inspiration for this project came from an interest in knowing all the possible words in a given board.">
+  <meta name="description" content="Boggle is a classical word searching game in a 4 x 4 grid of letter dice. The winner is determined based on the number and length of words found from the board. We quite often play this game when visiting my parents. The inspiration for this project came from an interest in knowing all the possible words in a given board.">
   
     
     <meta name="keywords" content="Machine Learning, Boggle, Image processing, Keras">
@@ -28,7 +28,7 @@
   <meta name="twitter:card" content="summary">
   <meta name="twitter:site" content="jlintusaari">
   <meta name="twitter:title" content="Building a Boggle solver from scratch using Keras">
-  <meta name="twitter:description" content="Boggle is a classical word searching game in a 4 x 4 grid of letter dice. The winner is determined based on the number and length of words found from the board. We quite often play this game with m...">
+  <meta name="twitter:description" content="Boggle is a classical word searching game in a 4 x 4 grid of letter dice. The winner is determined based on the number and length of words found from the board. We quite often play this game when v...">
   
     <meta name="twitter:creator" content="jlintusaari">
   
@@ -153,15 +153,15 @@
   <div class="post-content" itemprop="articleBody">
     <p>Boggle is a classical word searching game in a 4 x 4 grid of letter dice.
 The winner is determined based on the number and length of words found from the board.
-We quite often play this game with my family when we visit my parents. 
+We quite often play this game when visiting my parents. 
 The inspiration for this project came from an interest in knowing all the possible words in
 a given board.</p>
 
 <p><img src="/img/boggle/boggle.jpg" alt="A finnish boggle board" /></p>
 
 <p>So I decided to write a program that automates the process of finding the words from the game board.
-To make the program as easy to use as possible, one only has to take a picture of the boggle board and
-the program will return all the words in it.</p>
+To make the program easy to use, the input is just an image of a boggle board. The program returns 
+all the words in the board that are found from a dictionary file.</p>
 
 <h2 id="sub-problems-to-solve">Sub problems to solve</h2>
 
@@ -176,14 +176,13 @@ the program will return all the words in it.</p>
 This article considers the first task.</p>
 
 <p>The biggest problem was to acquire a decent dataset. 
-I did not have very many images of boggle boards to train a machine learning algorithm with. 
-I had decided to implement an artificial neural network (ANN), and those tend to require 
-a lot of labeled training data.</p>
-
-<p>I first thought of rendering boggle board images with a computer but came into a conclusion that 
+I had beforehand decided to use artificial neural networks (ANN), and those tend to require a lot of 
+labeled training data. 
+I first thought of rendering boggle board images with a computer but came into a conclusion that 
 making the renderer would take too much time. 
-I decided to take a few photos of the board and use them to generate more images for training.
-So next time I visited my parents, I took eight images of our game board with all the 
+I decided to take a few photos of the board and use them to generate more images for training.</p>
+
+<p>Next time when I visited my parents, I took eight images of our game board with all the 
 different die faces visible.</p>
 
 <h2 id="locating-the-board">Locating the board</h2>
@@ -191,42 +190,41 @@ different die faces visible.</p>
 <p>Given the shortage of training data, I decided to use traditional image processing techniques to 
 first locate the board in the image. 
 Once located, it would be easy to extract the individual letter images from it.
-Then I would only need to train an ANN classifier to classify the letter in the dice.</p>
+Then I would only need to train an ANN classifier to classify the letters in each die.</p>
 
-<p>I had not done image processing before but found a blog entry describing <a href="http://sudokugrab.blogspot.fi/2009/07/how-does-it-all-work.html">Sudoku grab</a>
+<p>I had not done much image processing before but found a blog entry describing <a href="http://sudokugrab.blogspot.fi/2009/07/how-does-it-all-work.html">Sudoku grab</a>
 quite useful. 
-After some experimentation I arrived at the following approach for locating the Boggle board from an 
+After some experimentation I arrived at the following approach for locating the Boggle board in an 
 image:</p>
 
 <ol>
-  <li>Assume an image with a boggle board (possibly with some other objects or noise, e.g. a hand)</li>
-  <li>Threshold the image to find all whitish blobs in it since the dice have a white background</li>
-  <li>Do outlier detection to determine what blobs are actually dice among
+  <li>Assume an image with a boggle board (possibly with some other objects, e.g. a hand).</li>
+  <li>Assume dice have a white background. Threshold the image to find all whitish blobs in it.</li>
+  <li>Do outlier detection to determine what blobs are actually dice among.
 all the white blobs. Remove the others.</li>
-  <li>Dilate the blobs until there is just one blob</li>
+  <li>Dilate the blobs until there is just one blob.</li>
   <li>This blob should now be basically the board. Find the minimal enclosing rectangle.</li>
   <li>Do a pespective transform to get the image of the board in upright position.</li>
-  <li>Remove the board gaps between letters</li>
+  <li>Extract each die from the upright board image</li>
 </ol>
 
-<p>Below is an example of the results after each step above:</p>
+<p>Below is an example of the results after each of the above steps:</p>
 
 <p><img src="/img/boggle/board-capturing_9_0.png" alt="Image processing steps" /></p>
 
 <p>The outlier detection in step three worked surprisingly well. 
-I added it after I noticed that the thresholding alone was too unreliable, even with some additional 
-tricks. 
+I added it after I noticed that the thresholding alone was too unreliable.
 The image had to basically contain just the Boggle board and not much else. 
-With the outlier detection, however, even having a hand in the picture and some light reflection 
-didn’t confuse the program. 
-I used three features for the detection, the size of the blob, the blob location and the minimum 
-bounding rectangle width in proportion to its height.</p>
+With the outlier detection, however, even having a hand, a sheet of paper, or even 
+light reflection from the table didn’t confuse the program. 
+I used three features for the outlier detection, the size of the blob, the blob location and the 
+minimum bounding rectangle width in proportion to its height.</p>
 
-<p>After extracting the features I take the 24 largest white blobs from the image, 
-and assume 16 of them are dice (as there are 16 dice). 
-The remaining eight blobs are “outliers” to be removed, e.g. white sheet of paper next to the game board.
-As the 16 dice that should have very similar feature values, the other whitish objects in the image 
-should be deemed as outliers and be discarded. 
+<p>After extraction of the features the program locates 24 largest white blobs in the image, 
+and assumes that 16 of them are dice (as there are 16 dice). 
+The remaining eight blobs are “outliers” to be removed, e.g. a white sheet of paper next to the game board.
+Because the blobs corresponding to the 16 dice should have very similar blob feature values, the 
+outlier detection algorithm should be able to label the other white blobs as outliers. 
 The outlier detection algorithm I used was the <a href="http://scikit-learn.org/stable/modules/generated/sklearn.covariance.EllipticEnvelope.html"><code class="highlighter-rouge">EllipticEnvelope</code></a> 
 from <a href="http://scikit-learn.org/stable/index.html">scikit-learn</a>.</p>
 
@@ -234,52 +232,56 @@ from <a href="http://scikit-learn.org/stable/index.html">scikit-learn</a>.</p>
 
 <p><img src="/img/boggle/board-capturing_7_0.png" alt="" /></p>
 
-<p>This process is not perfect in that it requires the image is taken quite directly from above the 
+<p>This process is not perfect in that it requires that the image is taken quite directly from above the 
 board. 
-I does make errors occasionally since e.g. thresholding is error prone in bad lighting conditions. 
-This however was sufficient for me for now. 
-The implementation so far was done with <code class="highlighter-rouge">scipy.ndimage</code>, <code class="highlighter-rouge">open-cv</code> and <code class="highlighter-rouge">numpy</code> Python libraries.</p>
+It also makes errors occasionally in bad lighting conditions because of the thresholding.
+However, this solution was sufficient for me for now and turned out to work pretty well in practice.
+The implementation used <code class="highlighter-rouge">scipy.ndimage</code>, <code class="highlighter-rouge">open-cv</code> and <code class="highlighter-rouge">numpy</code> Python libraries.</p>
 
 <h2 id="generating-a-training-dataset">Generating a training dataset</h2>
 
-<p>I had decided to use artificial neural networks (ANN) as the method for classifying the dice letters.
+<p>I decided to use artificial neural networks (ANN) to classify the letter in the image of a die.
 I first tried to find ready made letter datasets, but gave up after realizing that they were all for 
-the english alphabet and I would have to anyway add e.g. Ö, Ä and FG and BC from the finnish Boggle 
-version.</p>
+the english alphabet. That meant that I would anyway have to add the Ö, Ä letters to the dataset as 
+well as the combined FG and BC letter dice from the finnish Boggle version.</p>
 
 <p><img src="/img/boggle/accented.jpg" alt="Finnish boggle dice" style="width: 200px;" /></p>
 
-<p>I used six out of the eight images I had taken of the board to train the classifier with 
-(a total of 6 * 16 = 96 letters, all the different sides of the dice). 
-I labeled them, made a script that made blurred and sharpened version of those 6 images to bring my 
-labeled dataset size to 96 * 3 = 288 images of Boggle letters.</p>
+<p>I decided to use six out of the eight of the previously taken images of the board to generate 
+more training images by using random distortions. 
+The six game board images each had 16 dice in them that gave me an initial seed set of 6 * 16 = 96 
+images of a die (all the different sides of the dice in the game).
+First I labeled the die images by hand.
+To start increasing the size of my dataset, I then took a blurred and sharpened version of the 6 
+original images to bring my dataset size to 96 * 3 = 288 labeled images of Boggle letters.</p>
 
-<p>I decided to cast the dice images to black and white 64 x 64 pixel images.
-After this I made a function that would add random noise (salt and pepper), shifts and rotations to 
-a letter image. 
+<p>I decided to cast the dice images to black and white 64 x 64 pixel images for classification.
+After this I made a function that would add random noise (salt and pepper), shifts, and rotations to 
+the images. 
 Below you can see some of the original 288 black and white letter images and the result of the 
-noising on the right.</p>
+above random noising on the right.</p>
 
 <p><img src="/img/boggle/creating-dataset_8_0.png" alt="Preprocessed letter images" style="width: 300px;" />
 <img src="/img/boggle/creating-dataset_11_0.png" alt="Preprocessed and noised letter images" style="width: 300px;" /></p>
 
-<p>Because the distribution of the letters was not uniform (e.g. there are many more A:s compared to 
-e.g. Y:s) I had to sample them with weights so that the probability of each letter appearing was the 
-same. 
-Otherwise my classifier would easily become biased towards common letters.</p>
+<p>I would use these randomly noised images to train my classifier.
+Because the distribution of the letters was not uniform (e.g. there were many more A:s compared to 
+e.g. Y:s) I sampled them with weights to have an even probability of each letter appearing in a
+random sample.</p>
 
-<p>I was now ready to train the ANN with sort of an unlimited supply of training letter images.
-Due to the very small initial set of images there was a high risk of bias.
-This was however reduced with the black and white transforms and the different distortions applied.</p>
+<p>I was now ready to train the ANN with a sort of an unlimited supply of training letter images and
+hoped that the above steps would be enough for the classifier to generalize to unseen images 
+given the tiny seed set of training images.</p>
 
 <h2 id="training-the-ann">Training the ANN</h2>
 
-<p>I decided to use <a href="https://keras.io/">Keras</a> with the <a href="https://www.tensorflow.org/">TensorFlow</a> backend. 
+<p>I used <a href="https://keras.io/">Keras</a> with the <a href="https://www.tensorflow.org/">TensorFlow</a> backend to 
+implement the ANN model. 
 I decided to start with the basic one hidden layer setup with relu activation and a softmax loss. 
 Because the training data are rather heavily preprocessed black and white images of letters, I 
 anticipated that this ANN structure would already yield a decent performance.</p>
 
-<p>I ended up using the setup below, with the hidden layer size of 192.</p>
+<p>Below is the Keras code of the ANN model with a hidden layer size of 192.</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="n">model</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Sequential</span><span class="p">([</span>
@@ -296,31 +298,30 @@ anticipated that this ANN structure would already yield a decent performance.</p
 
 </code></pre></div></div>
 
-<p>I used random batches of 1000 distorted letters from the original 288 letters training set to train 
-the classifier.
-Using the original 288 letters training set (without distortions) as a validation set I was already 
-over 80% in accuracy after some tens of thousands of iterations. 
+<p>I used random batches of 1000 noised letters in training the classifier.
+Using the original 288 letters training set (without random noising) as a validation set I 
+reached over 80%  accuracy after just some tens of thousands of iterations. 
 After a few hundred thousands more I reached 100% accuracy, i.e. my model at least had nicely 
 (over)fitted to the original training dataset.</p>
 
 <p><img src="/img/boggle/training-classifier_17_0.png" alt="28 original images" style="width: 300px; float: right;" /></p>
 
 <p>I then took a look at the ANN hidden layer weights which seemed to had formed rather reasonable 
-looking shapes for detecting letters. 
+looking shapes for detecting letters in different 90 degree orientations. 
 You can see the 192 hidden node weight visualizations on the right arranged such that there are four 
 feature maps (nodes) on each row.</p>
 
-<p>I then tried classifying a batch of 1000 randomly noised images.
-With that the accuracy was around 98%, i.e. around 20 misclassified letters per a sample of 1000 
-randomly distorted letters.
-Not very good.</p>
+<p>I then tried the classifier on a batch of 1000 randomly noised images.
+With that the accuracy was roughly 98%, i.e. around 20 misclassified letters per batch.
+For the boggle solver to work, it needs to be able to correctly recognize all the letters in the 
+board at once, so I thought this would need to be higher.</p>
 
 <p>I decided to let it train 32M letters overnight (using CPU only here) and see if the accuracy would 
 improve. 
-On the next morning the performance was mostly 100% percent with batches of 1000 randomly noised
-letter images. 
+On the next morning the performance was mostly 100% percent for batches of 1000 randomly noised
+letter images although on rare occasion a single letter would be misclassified.
 Since the perfomance could not really be meaningfully improved, I decided not to develop the model 
-further with e.g. adding convolutional layers.</p>
+further with e.g. convolutional layers.</p>
 
 <h3 id="examples-of-missclassifications">Examples of missclassifications</h3>
 
@@ -339,21 +340,30 @@ image.</p>
 So I had a total of 2 * 16 = 32 images of letters for the test set. 
 That would have to do.</p>
 
-<p>Evaluating the model with those 32 before unseen images I got a 100% accuracy with a loss of 5.6e-6.</p>
+<p>Evaluating the model with those 32 before unseen images I got a 100% accuracy with a loss of 5.6e-6.
+This was encouraging, but due to the minuscule size of the test set, it would really need to be 
+tested in practice.</p>
 
-<p>Later when trying the classifier out in real life I had to tune the thresholds in the image 
-processing part a bit to make it more robust against lighting differences (the original eight images 
-were taken in similar lighting which introduced bias to the sample).
-This affected to the program’s ability to locate the board properly and the ability to transform 
-the color letter images to black and white images.
-However the ANN classifier did not undergo any changes and performed surprisingly well with the 
-provided black and white images.</p>
+<p>When testing the first time in practice, it turned out that the original 8 images were taken in such 
+a similar lighting condition that the program was not able to locate the board properly nor
+make the transform to black and white images with new images.
+In other words there was a considerable bias in the original sample with respect to the lighting. 
+I had to tune the thresholding in the image processing part a bit to make it more robust against 
+lighting differences.
+The ANN classifier however did not undergo any changes and performed surprisingly well with the 
+provided black and white images.
+The setup was simple enough and the letter noising sufficient for making the classifier to 
+generalize to unseen letter images.</p>
 
-<p>The classifier can be tried online <a href="kevea.fi:8000">here</a>. 
-The web interface is still in progress so please bear with it for now.
-The program is going to work only with images that are taken from a board that is similar to the 
-board in the very beginning of this post.
-And the words found will be in finnish due to the use of a finnish dictionary file ;)</p>
+<p>The resulting classifier can be tried online <a href="kevea.fi:8000">here</a>. 
+The web interface is put together in haste so please bear with it.
+Notice that in order to work, the images must conform to the assumptions made above, e.g. that the
+dice must have a white background.
+It has not been tested with other boggle boards besides the one that my parents own. 
+Also it won’t recognize letters that are not present in the dice of the finnish Boggle version, such
+as B or C (there is a combined die with BC in the finnish version :).
+And the words found will be in finnish ;)
+However, we have successfully used it and enjoyed it in our games!</p>
 
   </div>
 
