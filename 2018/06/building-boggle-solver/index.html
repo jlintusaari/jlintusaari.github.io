@@ -13,7 +13,7 @@
   <meta name="description" content="Boggle is a classical word searching game in a 4 x 4 grid of letter dice. The winner is determined based on the number and length of words found from the board. We quite often play this game when visiting my parents. The inspiration for this project came from an interest in knowing all the possible words in a given board.">
   
     
-    <meta name="keywords" content="Machine Learning, Boggle, Image processing, Keras">
+    <meta name="keywords" content="Machine Learning, Boggle, Image Processing, Keras">
   
 
   <link rel="stylesheet" href="/assets/main.css">
@@ -22,7 +22,8 @@
   
   <link rel="alternate" type="application/rss+xml" title="Jarno&#39;s blog" href="/feed.xml">
 
-  
+  <!-- Add icon library -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
   
   <meta name="twitter:card" content="summary">
@@ -140,12 +141,21 @@
       
     
       
-        <a href="/categories/image-processing/">Image processing</a>
+        <a href="/categories/image-processing/">Image Processing</a>
       
     
   
 
 
+
+
+
+
+<span class="posts-some-links">
+  <a href="https://twitter.com/jlintusaari?ref_src=twsrc%5Etfw" class="twitter-follow-button"
+     data-show-screen-name="false" data-show-count="false">Follow</a>
+  <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+</span>
 
 </p>
   </header>
@@ -163,7 +173,7 @@ a given board.</p>
 To make the program easy to use, the input is just an image of a boggle board. The program returns 
 all the words in the board that are found from a dictionary file.</p>
 
-<h2 id="sub-problems-to-solve">Sub problems to solve</h2>
+<h2 id="subproblems-to-solve">Subproblems to solve</h2>
 
 <p>There are two main tasks:</p>
 
@@ -333,7 +343,7 @@ image.</p>
 <p><img src="/img/boggle/training-classifier_21_1.png" alt="A missclassified letter" />
 <img src="/img/boggle/training-classifier_23_1.png" alt="A missclassifier letter" /></p>
 
-<h2 id="test-set">Test set</h2>
+<h2 id="testing-the-solver">Testing the solver</h2>
 
 <p>I had left out two images from the training set to serve as a test set. 
 So I had a total of 2 * 16 = 32 images of letters for the test set – not too many but that would have to do.</p>
@@ -377,7 +387,7 @@ However, we have successfully used it and enjoyed it in our Boggle games!</p>
     <p>
       
 
-&copy;  - Powered by <a href="https://jekyllrb.com">Jekyll</a> &amp; <a href="https://github.com/yous/whiteglass">whiteglass</a> - Subscribe via <a href="/feed.xml">RSS</a>
+&copy; Jarno Lintusaari - Powered by <a href="https://jekyllrb.com">Jekyll</a> &amp; <a href="https://github.com/yous/whiteglass">whiteglass</a> - Subscribe via <a href="/feed.xml">RSS</a>
 
     </p>
 

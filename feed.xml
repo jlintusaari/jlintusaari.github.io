@@ -5,7 +5,7 @@
   
   <link href="/feed.xml" rel="self" type="application/atom+xml" />
   <link href="/" rel="alternate" type="text/html" />
-  <updated>2018-07-16T11:55:46-05:00</updated>
+  <updated>2018-07-16T18:43:09-05:00</updated>
   <id>//</id>
 
   
@@ -16,6 +16,12 @@
     <subtitle>This blog features coding and machine learning related free-time projects.</subtitle>
   
 
+  
+    <author>
+        <name>Jarno Lintusaari</name>
+      
+      
+    </author>
   
 
   
@@ -42,7 +48,7 @@ a given board.&lt;/p&gt;
 To make the program easy to use, the input is just an image of a boggle board. The program returns 
 all the words in the board that are found from a dictionary file.&lt;/p&gt;
 
-&lt;h2 id=&quot;sub-problems-to-solve&quot;&gt;Sub problems to solve&lt;/h2&gt;
+&lt;h2 id=&quot;subproblems-to-solve&quot;&gt;Subproblems to solve&lt;/h2&gt;
 
 &lt;p&gt;There are two main tasks:&lt;/p&gt;
 
@@ -212,7 +218,7 @@ image.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&quot;/img/boggle/training-classifier_21_1.png&quot; alt=&quot;A missclassified letter&quot; /&gt;
 &lt;img src=&quot;/img/boggle/training-classifier_23_1.png&quot; alt=&quot;A missclassifier letter&quot; /&gt;&lt;/p&gt;
 
-&lt;h2 id=&quot;test-set&quot;&gt;Test set&lt;/h2&gt;
+&lt;h2 id=&quot;testing-the-solver&quot;&gt;Testing the solver&lt;/h2&gt;
 
 &lt;p&gt;I had left out two images from the training set to serve as a test set. 
 So I had a total of 2 * 16 = 32 images of letters for the test set – not too many but that would have to do.&lt;/p&gt;
@@ -247,13 +253,19 @@ However, we have successfully used it and enjoyed it in our Boggle games!&lt;/p&
       
 
       
+        <author>
+            <name>Jarno Lintusaari</name>
+          
+          
+        </author>
+      
 
       
         <category term="Machine Learning" />
       
         <category term="Keras" />
       
-        <category term="Image processing" />
+        <category term="Image Processing" />
       
 
       
@@ -473,6 +485,12 @@ folder. After committing and pushing you should see your blog appearing at
       
 
       
+        <author>
+            <name>Jarno Lintusaari</name>
+          
+          
+        </author>
+      
 
       
         <category term="Jekyll" />
@@ -481,7 +499,7 @@ folder. After committing and pushing you should see your blog appearing at
       
         <category term="Docker" />
       
-        <category term="blog" />
+        <category term="Blog" />
       
 
       
