@@ -307,9 +307,8 @@ After a few hundred thousands more I reached 100% accuracy, i.e. my model at lea
 <p><img src="/img/boggle/training-classifier_17_0.png" alt="28 original images" style="width: 300px; float: right;" /></p>
 
 <p>I then took a look at the ANN hidden layer weights which seemed to had formed rather reasonable 
-looking shapes for detecting letters in different 90 degree orientations. 
-You can see the 192 hidden node weight visualizations on the right arranged such that there are four 
-feature maps (nodes) on each row.</p>
+looking shapes for detecting letters in different 90 degree rotations. 
+The image on the right shows the first 20 out of the 192 hidden layer node weight maps arranged such that there are four maps on each row.</p>
 
 <p>I then tried the classifier on a batch of 1000 randomly noised images.
 With that the accuracy was roughly 98%, i.e. around 20 misclassified letters per batch.
@@ -337,33 +336,30 @@ image.</p>
 <h2 id="test-set">Test set</h2>
 
 <p>I had left out two images from the training set to serve as a test set. 
-So I had a total of 2 * 16 = 32 images of letters for the test set. 
-That would have to do.</p>
+So I had a total of 2 * 16 = 32 images of letters for the test set – not too many but that would have to do.</p>
 
-<p>Evaluating the model with those 32 before unseen images I got a 100% accuracy with a loss of 5.6e-6.
+<p>Evaluating the model with the 32 unseen letter images gave a 100% accuracy with a loss of 5.6e-6.
 This was encouraging, but due to the minuscule size of the test set, it would really need to be 
 tested in practice.</p>
 
-<p>When testing the first time in practice, it turned out that the original 8 images were taken in such 
-a similar lighting condition that the program was not able to locate the board properly nor
-make the transform to black and white images with new images.
+<p>When testing the first time in practice, it turned out that the lighting condition in the original 8 images
+was too alike that the program was not able to locate the board nor do the black and white transform properly 
+with new images having a different lighting condition.
 In other words there was a considerable bias in the original sample with respect to the lighting. 
-I had to tune the thresholding in the image processing part a bit to make it more robust against 
-lighting differences.
+I had to tune the thresholding in the image processing part a bit to make it more robust.
 The ANN classifier however did not undergo any changes and performed surprisingly well with the 
-provided black and white images.
-The setup was simple enough and the letter noising sufficient for making the classifier to 
+black and white images right from the beginning.
+With the ANN, the problem setup was simple enough and the letter noising sufficient for allowing the classifier to 
 generalize to unseen letter images.</p>
 
-<p>The resulting classifier can be tried online <a href="kevea.fi:8000">here</a>. 
-The web interface is put together in haste so please bear with it.
-Notice that in order to work, the images must conform to the assumptions made above, e.g. that the
+<p>The resulting classifier can be tried online <a href="http://kevea.fi:8000">here</a>. 
+The web interface would benefit from a bit more work as it is quickly put together for my family’s Boggle games.
+Notice that in order to work, the images must conform to the assumptions made above, such as that the
 dice must have a white background.
-It has not been tested with other boggle boards besides the one that my parents own. 
-Also it won’t recognize letters that are not present in the dice of the finnish Boggle version, such
-as B or C (there is a combined die with BC in the finnish version :).
-And the words found will be in finnish ;)
-However, we have successfully used it and enjoyed it in our games!</p>
+It has not been tested with other boggle boards besides the one that my parents own (see the image in the beginning of this post). 
+It won’t recognize letters that are not present in the dice set of the finnish Boggle version, such
+as B or C. Also for now, the words found will be in finnish ;)
+However, we have successfully used it and enjoyed it in our Boggle games!</p>
 
   </div>
 
