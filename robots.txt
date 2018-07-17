@@ -1,1 +1,1 @@
-Sitemap: /sitemap.xml
+Sitemap: https://jlintusaari.github.io/sitemap.xml

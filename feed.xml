@@ -3,10 +3,10 @@
   <generator uri="http://jekyllrb.com" version="3.8.3">Jekyll</generator>
   
   
-  <link href="/feed.xml" rel="self" type="application/atom+xml" />
-  <link href="/" rel="alternate" type="text/html" />
-  <updated>2018-07-17T04:55:35-05:00</updated>
-  <id>//</id>
+  <link href="https://jlintusaari.github.io/feed.xml" rel="self" type="application/atom+xml" />
+  <link href="https://jlintusaari.github.io/" rel="alternate" type="text/html" />
+  <updated>2018-07-17T06:23:31-05:00</updated>
+  <id>https://jlintusaari.github.io//</id>
 
   
     <title type="html">Jarno’s blog</title>
@@ -31,12 +31,12 @@
       <title type="html">Building a Boggle solver from scratch using Keras</title>
       
       
-      <link href="/2018/06/building-boggle-solver/" rel="alternate" type="text/html" title="Building a Boggle solver from scratch using Keras" />
+      <link href="https://jlintusaari.github.io/2018/06/building-boggle-solver/" rel="alternate" type="text/html" title="Building a Boggle solver from scratch using Keras" />
       
       <published>2018-06-27T00:00:00-05:00</published>
       <updated>2018-06-27T00:00:00-05:00</updated>
-      <id>/2018/06/building-boggle-solver</id>
-      <content type="html" xml:base="/2018/06/building-boggle-solver/">&lt;p&gt;Boggle is a classical word searching game in a 4 x 4 grid of letter dice.
+      <id>https://jlintusaari.github.io/2018/06/building-boggle-solver</id>
+      <content type="html" xml:base="https://jlintusaari.github.io/2018/06/building-boggle-solver/">&lt;p&gt;Boggle is a classical word searching game in a 4 x 4 grid of letter dice.
 The winner is determined based on how many words the player has found and the length of those words.
 We quite often play this game when visiting my parents. 
 The inspiration for this project came from an interest in knowing all the possible words in
@@ -282,6 +282,9 @@ However, we have successfully used and enjoyed it in our Boggle games!&lt;/p&gt;
 
       
       
+        
+        <media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://jlintusaari.github.io/img/boggle/boggle.jpg" />
+      
     </entry>
   
   
@@ -291,12 +294,12 @@ However, we have successfully used and enjoyed it in our Boggle games!&lt;/p&gt;
       <title type="html">Making a GitHub hosted Jekyll blog with a custom theme</title>
       
       
-      <link href="/2018/06/github-hosted-jekyll-blog-custom-theme/" rel="alternate" type="text/html" title="Making a GitHub hosted Jekyll blog with a custom theme" />
+      <link href="https://jlintusaari.github.io/2018/06/github-hosted-jekyll-blog-custom-theme/" rel="alternate" type="text/html" title="Making a GitHub hosted Jekyll blog with a custom theme" />
       
       <published>2018-06-13T00:00:00-05:00</published>
       <updated>2018-06-13T00:00:00-05:00</updated>
-      <id>/2018/06/github-hosted-jekyll-blog-custom-theme</id>
-      <content type="html" xml:base="/2018/06/github-hosted-jekyll-blog-custom-theme/">&lt;p&gt;I have been thinking of making a blog for a while.
+      <id>https://jlintusaari.github.io/2018/06/github-hosted-jekyll-blog-custom-theme</id>
+      <content type="html" xml:base="https://jlintusaari.github.io/2018/06/github-hosted-jekyll-blog-custom-theme/">&lt;p&gt;I have been thinking of making a blog for a while.
 I wanted to find a blogging platform that was simple, customizable, static content based so that I 
 could host it in &lt;a href=&quot;https://pages.github.com/&quot;&gt;GitHub pages&lt;/a&gt;, and supported Markdown so that I could easily publish 
 code projects from Jupyter notebooks and R’s &lt;a href=&quot;https://yihui.name/knitr/&quot;&gt;knitr&lt;/a&gt;.
