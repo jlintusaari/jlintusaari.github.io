@@ -5,7 +5,7 @@
   
   <link href="https://jlintusaari.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://jlintusaari.github.io/" rel="alternate" type="text/html" />
-  <updated>2018-07-17T06:23:31-05:00</updated>
+  <updated>2018-07-17T06:40:57-05:00</updated>
   <id>https://jlintusaari.github.io//</id>
 
   
@@ -160,7 +160,7 @@ given the tiny initial set of training images.&lt;/p&gt;
 
 &lt;p&gt;I used &lt;a href=&quot;https://keras.io/&quot;&gt;Keras&lt;/a&gt; with the &lt;a href=&quot;https://www.tensorflow.org/&quot;&gt;TensorFlow&lt;/a&gt; backend to 
 implement the ANN model. 
-I decided to start with the basic one hidden layer setup with relu activation and a softmax loss. 
+I decided to start with the basic one hidden layer setup with relu activation and a categorical loss. 
 Because the training data are rather heavily preprocessed black and white images of letters, I 
 anticipated that this ANN structure would already yield a decent performance.&lt;/p&gt;
 
