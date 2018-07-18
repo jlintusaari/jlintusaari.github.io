@@ -5,7 +5,7 @@
   
   <link href="https://jlintusaari.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://jlintusaari.github.io/" rel="alternate" type="text/html" />
-  <updated>2018-07-17T07:13:59-05:00</updated>
+  <updated>2018-07-18T17:06:33-05:00</updated>
   <id>https://jlintusaari.github.io//</id>
 
   
@@ -24,6 +24,207 @@
     </author>
   
 
+  
+  
+    <entry>
+      
+      <title type="html">How to compile R Markdown documents using Docker</title>
+      
+      
+      <link href="https://jlintusaari.github.io/2018/07/how-to-compile-rmarkdown-documents-using-docker/" rel="alternate" type="text/html" title="How to compile R Markdown documents using Docker" />
+      
+      <published>2018-07-18T00:00:00-05:00</published>
+      <updated>2018-07-18T00:00:00-05:00</updated>
+      <id>https://jlintusaari.github.io/2018/07/how-to-compile-rmarkdown-documents-using-docker</id>
+      <content type="html" xml:base="https://jlintusaari.github.io/2018/07/how-to-compile-rmarkdown-documents-using-docker/">&lt;p&gt;I do some freelance web programming and got a request from my client to make a new monthly 
+sales report for their web shop. 
+After specifying what should be in it, I thought to myself, “this would be so quick to make with 
+&lt;a href=&quot;https://rmarkdown.rstudio.com/&quot;&gt;R Markdown&lt;/a&gt; and &lt;a href=&quot;https://ggplot2.tidyverse.org/&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ggplot2&lt;/code&gt;&lt;/a&gt;… but wait, why not make it with R Markdown and 
+&lt;code class=&quot;highlighter-rouge&quot;&gt;ggplot2&lt;/code&gt;?”&lt;/p&gt;
+
+&lt;p&gt;This was actually a pefect case for it since it needed to be printable pdf and come out once
+a month. So no need for &lt;a href=&quot;https://shiny.rstudio.com/&quot;&gt;shiny&lt;/a&gt; interactivity this time (no pun intended), just a formally looking 
+sales report with figures and tables in it. Let’s do it.&lt;/p&gt;
+
+&lt;p&gt;The first thing to think about was how to generate the pdf reports in the web server. 
+Generating pdf:s with R Markdown requires first of all R, but also &lt;a href=&quot;https://www.latex-project.org/&quot;&gt;LaTeX&lt;/a&gt; to be installed, and as you
+might guess, they were not available in the web server.
+An easy way to avoid having to install additional packages to a web server itself is to use Docker 
+containers that contain the required packages.&lt;/p&gt;
+
+&lt;h2 id=&quot;using-r-markdown-in-a-docker-container&quot;&gt;Using R Markdown in a Docker container&lt;/h2&gt;
+
+&lt;p&gt;As mentioned above, using a &lt;a href=&quot;https://www.docker.com/&quot;&gt;Docker&lt;/a&gt; container saves me from having to installing R, LaTeX and other 
+dependencies to the server itself. They don’t need to be maintained and I can easily deploy the 
+container to any other web server if a need arises.&lt;/p&gt;
+
+&lt;p&gt;I’m going to use &lt;code class=&quot;highlighter-rouge&quot;&gt;rocker/verse&lt;/code&gt; image from the &lt;a href=&quot;https://github.com/rocker-org/rocker&quot;&gt;rocker R images&lt;/a&gt; for creating the report.
+This image has the R Markdown and LaTeX systems pre-installed for compiling pdf reports.
+If you are new to Docker, here is the &lt;a href=&quot;https://docs.docker.com/&quot;&gt;official documentation&lt;/a&gt; of how to get it installed to your system.&lt;/p&gt;
+
+&lt;p&gt;Assuming you have Docker installed, let’s pull the &lt;code class=&quot;highlighter-rouge&quot;&gt;rocker/verse&lt;/code&gt; image with R version &lt;code class=&quot;highlighter-rouge&quot;&gt;3.5.1&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker pull rocker/verse:3.5.1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;First I’m going to test the image to see what R packages I possibly need to add to the image. 
+This image has also RStudio pre-installed in it, and it is configured to run the RStudio server by 
+default.
+So for testing, running the following command will start RStudio in &lt;code class=&quot;highlighter-rouge&quot;&gt;localhost:8787&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker run &lt;span class=&quot;nt&quot;&gt;--rm&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 8787:8787 rocker/verse:3.5.1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Once you type &lt;code class=&quot;highlighter-rouge&quot;&gt;localhost:8787&lt;/code&gt; to your browser, you will be asked for a username and password, 
+which are both &lt;code class=&quot;highlighter-rouge&quot;&gt;rstudio&lt;/code&gt; by default.
+To my happy surprise, all the packages that I needed were already installed so I could just 
+go ahead running the pdf compilation.&lt;/p&gt;
+
+&lt;h3 id=&quot;generating-the-pdf-with-docker&quot;&gt;Generating the pdf with Docker&lt;/h3&gt;
+
+&lt;p&gt;Let’s begin by compiling pdf reports with the &lt;code class=&quot;highlighter-rouge&quot;&gt;rocker/verse:3.5.1&lt;/code&gt; image.
+I have provided a &lt;a href=&quot;https://github.com/jlintusaari/R-docker-report&quot;&gt;git repository&lt;/a&gt; that contains example files for creating pdf reports 
+with R Markdown and Docker. 
+You can clone it to you computer by running&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git clone https://github.com/jlintusaari/R-docker-report.git
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The repository contains an &lt;code class=&quot;highlighter-rouge&quot;&gt;example_report.R&lt;/code&gt; that takes as input a csv file and generates a pdf 
+report using the &lt;code class=&quot;highlighter-rouge&quot;&gt;example_report.Rmd&lt;/code&gt; template below:&lt;/p&gt;
+
+&lt;div class=&quot;language-markdown highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;
+---&lt;/span&gt;
+title: &quot;Texas housing sales report&quot;
+author: &quot;Matti Meikäläinen&quot;
+date: &quot;&lt;span class=&quot;sb&quot;&gt;`r paste(Sys.Date())`&lt;/span&gt;&quot;
+&lt;span class=&quot;gh&quot;&gt;output: pdf_document
+---
+&lt;/span&gt;
+&lt;span class=&quot;gu&quot;&gt;## Number of sales&lt;/span&gt;
+
+The following chart shows the number of housing sales in three cities in Texas.
+Data is from the &lt;span class=&quot;sb&quot;&gt;`txhousing`&lt;/span&gt; data set provided by the TAMU real estate center.
+
+&lt;span class=&quot;p&quot;&gt;```&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;{r echo=FALSE, message=FALSE, warning=FALSE}&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;
+ggplot(dt, aes(date, sales, color=city)) + geom_point() + geom_smooth()
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;```&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The generated pdf looks like this:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://jlintusaari.github.io/img/r-docker-report/sales.png&quot; alt=&quot;Screenshot of the example report&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The example csv data is stored in &lt;code class=&quot;highlighter-rouge&quot;&gt;data.csv&lt;/code&gt; file and was created with the &lt;code class=&quot;highlighter-rouge&quot;&gt;R/make_csv.R&lt;/code&gt; script.
+Assuming we are in the folder where the &lt;code class=&quot;highlighter-rouge&quot;&gt;example_report.R&lt;/code&gt; file is located, we run the following 
+command to compile the report with Docker:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker run &lt;span class=&quot;nt&quot;&gt;--rm&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-v&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$PWD&lt;/span&gt;:/report &lt;span class=&quot;nt&quot;&gt;-w&lt;/span&gt; /report rocker/verse:3.5.1 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+ Rscript &lt;span class=&quot;nt&quot;&gt;--vanilla&lt;/span&gt; example_report.R data.csv
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The compilation works, but there are multiple things that could be improved:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;The default user in the container is root, causing the generated pdf to be owned by root&lt;/li&gt;
+  &lt;li&gt;The above command is rather long and requires setting e.g. the working directory with &lt;code class=&quot;highlighter-rouge&quot;&gt;-w&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;With my actual report, the latex system was missing some packages that were automatically installed 
+but made the pdf compilation slow&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;So let’s create a new Docker image based on &lt;code class=&quot;highlighter-rouge&quot;&gt;rocker/verse:3.5.1&lt;/code&gt; that is better configured for our 
+purposes. 
+We will do this using a &lt;a href=&quot;https://docs.docker.com/engine/reference/builder/&quot;&gt;Dockerfile&lt;/a&gt;.
+The following &lt;code class=&quot;highlighter-rouge&quot;&gt;Dockerfile&lt;/code&gt; starts the image creation from the &lt;code class=&quot;highlighter-rouge&quot;&gt;rocker/verse:3.5.1&lt;/code&gt; image and 
+adds configurations to address the above issues:&lt;/p&gt;
+
+&lt;div class=&quot;language-dockerfile highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; rocker/verse:3.5.1&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# My sales report required an additional latex package called `eurosym`.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# RUN tlmgr install eurosym&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# Set a user and the working directory&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;USER&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; rstudio&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;WORKDIR&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; /report&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# Set the container to run `Rscript --vanilla ` by default&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;ENTRYPOINT&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; [&quot;/usr/local/bin/Rscript&quot;, &quot;--vanilla&quot;]&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# Set the `example_report.R data.csv` as the default script to run with ENTRYPOINT's Rscript&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;CMD&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; [&quot;example_report.R&quot;, &quot;data.csv&quot;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;You can find this file from the &lt;code class=&quot;highlighter-rouge&quot;&gt;docker&lt;/code&gt; folder in the &lt;a href=&quot;https://github.com/jlintusaari/R-docker-report&quot;&gt;git repository&lt;/a&gt;.
+Now assuming you are in the &lt;code class=&quot;highlighter-rouge&quot;&gt;docker&lt;/code&gt; folder where the &lt;code class=&quot;highlighter-rouge&quot;&gt;Dockerfile&lt;/code&gt; is located, you can create the new image 
+with:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker build &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; report-maker &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;After this we can use the &lt;code class=&quot;highlighter-rouge&quot;&gt;report-maker&lt;/code&gt; image to make the &lt;code class=&quot;highlighter-rouge&quot;&gt;pdf&lt;/code&gt; compilation both faster and more 
+convenient.
+The following command will create the report 
+(remember to remove the root owned &lt;code class=&quot;highlighter-rouge&quot;&gt;example_report.pdf&lt;/code&gt; first if you haven’t):&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker run &lt;span class=&quot;nt&quot;&gt;--rm&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-v&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$PWD&lt;/span&gt;:/report report-maker
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Of course our &lt;code class=&quot;highlighter-rouge&quot;&gt;report-maker&lt;/code&gt; image can be used to run any kind of R scripts, but the name is 
+descriptive for our purpose.&lt;/p&gt;
+
+&lt;h2 id=&quot;production-use&quot;&gt;Production use&lt;/h2&gt;
+
+&lt;p&gt;The web application I’m deploying this for is implemented with &lt;a href=&quot;https://rubyonrails.org/&quot;&gt;Ruby on Rails&lt;/a&gt;.
+Rails provides an inbuilt task system that can easily access the database of the web-application to 
+retrieve relevant data for report creation.&lt;/p&gt;
+
+&lt;p&gt;In this particular case the pdf reports need to be generated once a month.
+I will thus create a rails task that:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Queries the database and saves the relevant information to a csv file&lt;/li&gt;
+  &lt;li&gt;Provides the generated csv file to the &lt;code class=&quot;highlighter-rouge&quot;&gt;report-maker&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;After that I setup a &lt;a href=&quot;https://en.wikipedia.org/wiki/Cron&quot;&gt;cron job&lt;/a&gt; that runs the task the first day of every month.
+Once generated, the report is downloadable for the client through the web application.&lt;/p&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Jarno Lintusaari</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="R" />
+      
+        <category term="Docker" />
+      
+        <category term="R Markdown" />
+      
+
+      
+
+      
+        <summary type="html">I do some freelance web programming and got a request from my client to make a new monthly sales report for their web shop. After specifying what should be in it, I thought to myself, “this would be so quick to make with R Markdown and ggplot2… but wait, why not make it with R Markdown and ggplot2?”</summary>
+      
+
+      
+      
+        
+        <media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://jlintusaari.github.io/img/r-docker-report/sales.png" />
+      
+    </entry>
+  
   
   
     <entry>
