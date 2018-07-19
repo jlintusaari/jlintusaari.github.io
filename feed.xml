@@ -5,7 +5,7 @@
   
   <link href="https://jlintusaari.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://jlintusaari.github.io/" rel="alternate" type="text/html" />
-  <updated>2018-07-18T17:36:22-05:00</updated>
+  <updated>2018-07-19T13:56:57-05:00</updated>
   <id>https://jlintusaari.github.io//</id>
 
   
@@ -13,7 +13,7 @@
   
 
   
-    <subtitle>This blog features coding and machine learning related free-time projects.</subtitle>
+    <subtitle>A blog featuring coding and machine learning projects and thoughts related to these topics.</subtitle>
   
 
   
@@ -42,7 +42,7 @@ After specifying what should be in it, I thought to myself, “this would be so 
 &lt;a href=&quot;https://rmarkdown.rstudio.com/&quot;&gt;R Markdown&lt;/a&gt; and &lt;a href=&quot;https://ggplot2.tidyverse.org/&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ggplot2&lt;/code&gt;&lt;/a&gt;… but wait, why not make it with R Markdown and 
 &lt;code class=&quot;highlighter-rouge&quot;&gt;ggplot2&lt;/code&gt;?”&lt;/p&gt;
 
-&lt;p&gt;This was actually a pefect case for it since it needed to be printable pdf and come out once
+&lt;p&gt;This was actually a pefect case for it, since it needed to be printable pdf and come out once
 a month. So no need for &lt;a href=&quot;https://shiny.rstudio.com/&quot;&gt;shiny&lt;/a&gt; interactivity this time (no pun intended), just a formally looking 
 sales report with figures and tables in it. Let’s do it.&lt;/p&gt;
 
