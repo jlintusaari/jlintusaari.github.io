@@ -5,7 +5,7 @@
   
   <link href="https://jlintusaari.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://jlintusaari.github.io/" rel="alternate" type="text/html" />
-  <updated>2018-07-19T14:08:25-05:00</updated>
+  <updated>2018-08-06T14:57:11+03:00</updated>
   <id>https://jlintusaari.github.io//</id>
 
   
@@ -33,8 +33,8 @@
       
       <link href="https://jlintusaari.github.io/2018/07/how-to-compile-rmarkdown-documents-using-docker/" rel="alternate" type="text/html" title="How to compile R Markdown documents using Docker" />
       
-      <published>2018-07-18T00:00:00-05:00</published>
-      <updated>2018-07-18T00:00:00-05:00</updated>
+      <published>2018-08-06T14:50:00+03:00</published>
+      <updated>2018-08-06T14:50:00+03:00</updated>
       <id>https://jlintusaari.github.io/2018/07/how-to-compile-rmarkdown-documents-using-docker</id>
       <content type="html" xml:base="https://jlintusaari.github.io/2018/07/how-to-compile-rmarkdown-documents-using-docker/">&lt;p&gt;I do some freelance web programming and got a request from a client to make a new monthly 
 sales report for their web shop. 
@@ -234,8 +234,8 @@ Once generated, the report is downloadable for the client through the web applic
       
       <link href="https://jlintusaari.github.io/2018/06/building-boggle-solver/" rel="alternate" type="text/html" title="Building a Boggle solver from scratch using Keras" />
       
-      <published>2018-06-27T00:00:00-05:00</published>
-      <updated>2018-06-27T00:00:00-05:00</updated>
+      <published>2018-06-27T00:00:00+03:00</published>
+      <updated>2018-06-27T00:00:00+03:00</updated>
       <id>https://jlintusaari.github.io/2018/06/building-boggle-solver</id>
       <content type="html" xml:base="https://jlintusaari.github.io/2018/06/building-boggle-solver/">&lt;p&gt;Boggle is a classical word searching game in a 4 x 4 grid of letter dice.
 The winner is determined based on how many words the player has found and the length of those words.
@@ -497,8 +497,8 @@ However, we have successfully used and enjoyed it in our Boggle games!&lt;/p&gt;
       
       <link href="https://jlintusaari.github.io/2018/06/github-hosted-jekyll-blog-custom-theme/" rel="alternate" type="text/html" title="Making a GitHub hosted Jekyll blog with a custom theme" />
       
-      <published>2018-06-13T00:00:00-05:00</published>
-      <updated>2018-06-13T00:00:00-05:00</updated>
+      <published>2018-06-13T00:00:00+03:00</published>
+      <updated>2018-06-13T00:00:00+03:00</updated>
       <id>https://jlintusaari.github.io/2018/06/github-hosted-jekyll-blog-custom-theme</id>
       <content type="html" xml:base="https://jlintusaari.github.io/2018/06/github-hosted-jekyll-blog-custom-theme/">&lt;p&gt;I have been thinking of making a blog for a while.
 I wanted to find a blogging platform that was simple, customizable, static content based so that I 

@@ -5,7 +5,7 @@
   
   <link href="https://jlintusaari.github.io/rfeed.xml" rel="self" type="application/atom+xml" />
   <link href="https://jlintusaari.github.io/" rel="alternate" type="text/html" />
-  <updated>2018-07-19T14:08:25-05:00</updated>
+  <updated>2018-08-06T14:57:11+03:00</updated>
   <id>https://jlintusaari.github.io//</id>
 
   
@@ -33,8 +33,8 @@
       
       <link href="https://jlintusaari.github.io/2018/07/how-to-compile-rmarkdown-documents-using-docker/" rel="alternate" type="text/html" title="How to compile R Markdown documents using Docker" />
       
-      <published>2018-07-18T00:00:00-05:00</published>
-      <updated>2018-07-18T00:00:00-05:00</updated>
+      <published>2018-08-06T14:50:00+03:00</published>
+      <updated>2018-08-06T14:50:00+03:00</updated>
       <id>https://jlintusaari.github.io/2018/07/how-to-compile-rmarkdown-documents-using-docker</id>
       <content type="html" xml:base="https://jlintusaari.github.io/2018/07/how-to-compile-rmarkdown-documents-using-docker/">&lt;p&gt;I do some freelance web programming and got a request from a client to make a new monthly 
 sales report for their web shop. 
