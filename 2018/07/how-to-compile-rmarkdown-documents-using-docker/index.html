@@ -10,7 +10,7 @@
   
   
   <title>How to compile R Markdown documents using Docker</title>
-  <meta name="description" content="I do some freelance web programming and got a request from a client to make a new monthly sales report for their web shop. After specifying what should be in it, I thought to myself, “this would be so quick to make with R Markdown and ggplot2… but wait, why not make it with R Markdown and ggplot2?”">
+  <meta name="description" content="I got a request from my client to make a new sales report for the web shop that I had previously built for them. The client wanted a printable pdf that would extract sales information for a given month and represent them with figures and tables. After specifying all the details I came into a conclusion that it would make sense to implement the report using R, which makes it easy to create good looking reports containing graphs and tables using R’s Markdown and ggplot2 libraries.">
   
     
     <meta name="keywords" content="R, Docker, R Markdown">
@@ -20,7 +20,7 @@
   <link rel="canonical" href="https://jlintusaari.github.io/2018/07/how-to-compile-rmarkdown-documents-using-docker/">
   
   
-  <link rel="alternate" type="application/rss+xml" title="Jarno&#39;s blog" href="https://jlintusaari.github.io/feed.xml">
+  <link rel="alternate" type="application/rss+xml" title="Jarno Lintusaari&#39;s blog" href="https://jlintusaari.github.io/feed.xml">
 
   <!-- Add icon library -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -29,7 +29,7 @@
   <meta name="twitter:card" content="summary">
   <meta name="twitter:site" content="jlintusaari">
   <meta name="twitter:title" content="How to compile R Markdown documents using Docker">
-  <meta name="twitter:description" content="I do some freelance web programming and got a request from a client to make a new monthly sales report for their web shop. After specifying what should be in it, I thought to myself, “this would be...">
+  <meta name="twitter:description" content="I got a request from my client to make a new sales report for the web shop that I had previously built for them. The client wanted a printable pdf that would extract sales information for a given m...">
   
     <meta name="twitter:creator" content="jlintusaari">
   
@@ -66,7 +66,7 @@
 
   <div class="wrapper">
 
-    <a class="site-title" href="/">Jarno&#39;s blog</a>
+    <a class="site-title" href="/">Jarno Lintusaari&#39;s blog</a>
 
     <nav class="site-nav">
       
@@ -178,26 +178,26 @@
   </header>
 
   <div class="post-content" itemprop="articleBody">
-    <p>I do some freelance web programming and got a request from a client to make a new monthly 
-sales report for their web shop. 
-After specifying what should be in it, I thought to myself, “this would be so quick to make with 
-<a href="https://rmarkdown.rstudio.com/">R Markdown</a> and <a href="https://ggplot2.tidyverse.org/"><code class="highlighter-rouge">ggplot2</code></a>… but wait, why not make it with R Markdown and 
-<code class="highlighter-rouge">ggplot2</code>?”</p>
+    <p>I got a request from my client to make a new sales report for the web
+shop that I had previously built for them.
+The client wanted a printable pdf that would extract sales information for a given month
+and represent them with figures and tables.
+After specifying all the details I came into a conclusion that it would make
+sense to implement the report using <a href="https://www.r-project.org/">R</a>, which makes it easy to create good looking
+reports containing graphs and tables using R’s <a href="https://rmarkdown.rstudio.com/">Markdown</a> and
+<a href="https://ggplot2.tidyverse.org/"><code class="highlighter-rouge">ggplot2</code></a> libraries.</p>
 
-<p>This was actually a pefect case for it, since it needed to be printable pdf and come out once
-a month. So no need for <a href="https://shiny.rstudio.com/">shiny</a> interactivity this time (no pun intended), just a formally looking 
-sales report with figures and tables in it. Let’s do it.</p>
-
-<p>The first thing to think about was how to generate the pdf reports in the web server. 
-Generating pdf:s with R Markdown requires first of all R, but also <a href="https://www.latex-project.org/">LaTeX</a> to be installed, and as you
-might guess, they were not available in the web server.
-An easy way to avoid having to install additional packages to a web server itself is to use Docker 
-containers that contain the required packages.</p>
+<p>Generating pdf:s with R Markdown requires first of all R with a bunch of
+libraries, but also <a href="https://www.latex-project.org/">LaTeX</a> for typesetting. Installation and maintenance of
+those installations in a web server is a bit tedious especially if you at some
+point need to migrate to another environment.
+An easy way to avoid these difficulties is to use Docker containers that contain
+the needed software, and are easy to maintain and move if a need be.</p>
 
 <h2 id="using-r-markdown-in-a-docker-container">Using R Markdown in a Docker container</h2>
 
-<p>As mentioned above, using a <a href="https://www.docker.com/">Docker</a> container saves me from having to installing R, LaTeX and other 
-dependencies to the server itself. They don’t need to be maintained and I can easily deploy the 
+<p>As mentioned above, using a <a href="https://www.docker.com/">Docker</a> container saves me from having to installing R, LaTeX and other
+dependencies to the server itself. They don’t need to be maintained and I can easily deploy the
 container to any other web server if a need arises.</p>
 
 <p>I’m going to use <code class="highlighter-rouge">rocker/verse</code> image from the <a href="https://github.com/rocker-org/rocker">rocker R images</a> for creating the report.
@@ -209,30 +209,30 @@ If you are new to Docker, here is the <a href="https://docs.docker.com/">officia
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker pull rocker/verse:3.5.1
 </code></pre></div></div>
 
-<p>First I’m going to test the image to see what R packages I possibly need to add to the image. 
-This image has also RStudio pre-installed in it, and it is configured to run the RStudio server by 
+<p>First I’m going to test the image to see what R packages I possibly need to add to the image.
+This image has also RStudio pre-installed in it, and it is configured to run the RStudio server by
 default.
 So for testing, running the following command will start RStudio in <code class="highlighter-rouge">localhost:8787</code>:</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">--rm</span> <span class="nt">-p</span> 8787:8787 rocker/verse:3.5.1
 </code></pre></div></div>
 
-<p>Once you type <code class="highlighter-rouge">localhost:8787</code> to your browser, you will be asked for a username and password, 
+<p>Once you type <code class="highlighter-rouge">localhost:8787</code> to your browser, you will be asked for a username and password,
 which are both <code class="highlighter-rouge">rstudio</code> by default.
-To my happy surprise, all the packages that I needed were already installed so I could just 
+To my happy surprise, all the packages that I needed were already installed so I could just
 go ahead running the pdf compilation.</p>
 
 <h3 id="generating-the-pdf-with-docker">Generating the pdf with Docker</h3>
 
 <p>Let’s begin by compiling pdf reports with the <code class="highlighter-rouge">rocker/verse:3.5.1</code> image.
-I have provided a <a href="https://github.com/jlintusaari/R-docker-report">git repository</a> that contains example files for creating pdf reports 
-with R Markdown and Docker. 
+I have provided a <a href="https://github.com/jlintusaari/R-docker-report">git repository</a> that contains example files for creating pdf reports
+with R Markdown and Docker.
 You can clone it to you computer by running</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/jlintusaari/R-docker-report.git
 </code></pre></div></div>
 
-<p>The repository contains an <code class="highlighter-rouge">example_report.R</code> that takes as input a csv file and generates a pdf 
+<p>The repository contains an <code class="highlighter-rouge">example_report.R</code> that takes as input a csv file and generates a pdf
 report using the <code class="highlighter-rouge">example_report.Rmd</code> template below:</p>
 
 <div class="language-markdown highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">
@@ -254,12 +254,12 @@ ggplot(dt, aes(date, sales, color=city)) + geom_point() + geom_smooth()
 
 </code></pre></div></div>
 
-<p>The generated pdf looks like this:</p>
+<p>The generated example pdf looks like this:</p>
 
 <p><img src="https://jlintusaari.github.io/img/r-docker-report/sales.png" alt="Screenshot of the example report" /></p>
 
 <p>The example csv data is stored in <code class="highlighter-rouge">data.csv</code> file and was created with the <code class="highlighter-rouge">R/make_csv.R</code> script.
-Assuming we are in the folder where the <code class="highlighter-rouge">example_report.R</code> file is located, we run the following 
+Assuming we are in the folder where the <code class="highlighter-rouge">example_report.R</code> file is located, we run the following
 command to compile the report with Docker:</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">--rm</span> <span class="nt">-v</span> <span class="nv">$PWD</span>:/report <span class="nt">-w</span> /report rocker/verse:3.5.1 <span class="se">\</span>
@@ -271,14 +271,14 @@ command to compile the report with Docker:</p>
 <ol>
   <li>The default user in the container is root, causing the generated pdf to be owned by root</li>
   <li>The above command is rather long and requires setting e.g. the working directory with <code class="highlighter-rouge">-w</code></li>
-  <li>With my actual report, the latex system was missing some packages that were automatically installed 
+  <li>With my actual report, the latex system was missing some packages that were automatically installed
 but made the pdf compilation slow</li>
 </ol>
 
-<p>So let’s create a new Docker image based on <code class="highlighter-rouge">rocker/verse:3.5.1</code> that is better configured for our 
-purposes. 
+<p>So let’s create a new Docker image based on <code class="highlighter-rouge">rocker/verse:3.5.1</code> that is better configured for our
+purposes.
 We will do this using a <a href="https://docs.docker.com/engine/reference/builder/">Dockerfile</a>.
-The following <code class="highlighter-rouge">Dockerfile</code> starts the image creation from the <code class="highlighter-rouge">rocker/verse:3.5.1</code> image and 
+The following <code class="highlighter-rouge">Dockerfile</code> starts the image creation from the <code class="highlighter-rouge">rocker/verse:3.5.1</code> image and
 adds configurations to address the above issues:</p>
 
 <div class="language-dockerfile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">FROM</span><span class="s"> rocker/verse:3.5.1</span>
@@ -298,39 +298,40 @@ adds configurations to address the above issues:</p>
 </code></pre></div></div>
 
 <p>You can find this file from the <code class="highlighter-rouge">docker</code> folder in the <a href="https://github.com/jlintusaari/R-docker-report">git repository</a>.
-Now assuming you are in the <code class="highlighter-rouge">docker</code> folder where the <code class="highlighter-rouge">Dockerfile</code> is located, you can create the new image 
+Now assuming you are in the <code class="highlighter-rouge">docker</code> folder where the <code class="highlighter-rouge">Dockerfile</code> is located, you can create the new image
 with:</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker build <span class="nt">-t</span> report-maker <span class="nb">.</span>
 </code></pre></div></div>
 
-<p>After this we can use the <code class="highlighter-rouge">report-maker</code> image to make the <code class="highlighter-rouge">pdf</code> compilation both faster and more 
+<p>After this we can use the <code class="highlighter-rouge">report-maker</code> image to make the <code class="highlighter-rouge">pdf</code> compilation both faster and more
 convenient.
-The following command will create the report 
+The following command will create the report
 (remember to remove the root owned <code class="highlighter-rouge">example_report.pdf</code> first if you haven’t):</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">--rm</span> <span class="nt">-v</span> <span class="nv">$PWD</span>:/report report-maker
 </code></pre></div></div>
 
-<p>Of course our <code class="highlighter-rouge">report-maker</code> image can be used to run any kind of R scripts, but the name is 
+<p>Of course our <code class="highlighter-rouge">report-maker</code> image can be used to run any kind of R scripts, but the name is
 descriptive for our purpose.</p>
 
 <h2 id="production-use">Production use</h2>
 
-<p>The web application I’m deploying this for is implemented with <a href="https://rubyonrails.org/">Ruby on Rails</a>.
-Rails provides an inbuilt task system that can easily access the database of the web-application to 
-retrieve relevant data for report creation.</p>
+<p>The web shop that this report will be used in is implemented with <a href="https://rubyonrails.org/">Ruby on Rails</a>.
+Rails provides an inbuilt task system that can easily access the database of the web-application to
+retrieve relevant data for the report creation.</p>
 
-<p>In this particular case the pdf reports need to be generated once a month.
-I will thus create a rails task that:</p>
+<p>For automating the whole report generation process, the easiest way is to create
+a rails task that:</p>
 
 <ol>
   <li>Queries the database and saves the relevant information to a csv file</li>
-  <li>Provides the generated csv file to the <code class="highlighter-rouge">report-maker</code></li>
+  <li>Provides the generated csv file as an argument for the <code class="highlighter-rouge">report-maker</code></li>
 </ol>
 
-<p>After that I setup a <a href="https://en.wikipedia.org/wiki/Cron">cron job</a> that runs the task the first day of every month.
-Once generated, the report is downloadable for the client through the web application.</p>
+<p>After that one can setup a <a href="https://en.wikipedia.org/wiki/Cron">cron job</a> that runs the task e.g. the first
+day of every month. Once generated, the report can be made downloadable for the
+client from the web application.</p>
 
 
   </div>

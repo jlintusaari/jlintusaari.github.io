@@ -5,11 +5,11 @@
   
   <link href="https://jlintusaari.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://jlintusaari.github.io/" rel="alternate" type="text/html" />
-  <updated>2018-08-06T14:57:11+03:00</updated>
+  <updated>2019-07-08T14:48:18+03:00</updated>
   <id>https://jlintusaari.github.io//</id>
 
   
-    <title type="html">Jarno’s blog</title>
+    <title type="html">Jarno Lintusaari’s blog</title>
   
 
   
@@ -36,26 +36,26 @@
       <published>2018-08-06T14:50:00+03:00</published>
       <updated>2018-08-06T14:50:00+03:00</updated>
       <id>https://jlintusaari.github.io/2018/07/how-to-compile-rmarkdown-documents-using-docker</id>
-      <content type="html" xml:base="https://jlintusaari.github.io/2018/07/how-to-compile-rmarkdown-documents-using-docker/">&lt;p&gt;I do some freelance web programming and got a request from a client to make a new monthly 
-sales report for their web shop. 
-After specifying what should be in it, I thought to myself, “this would be so quick to make with 
-&lt;a href=&quot;https://rmarkdown.rstudio.com/&quot;&gt;R Markdown&lt;/a&gt; and &lt;a href=&quot;https://ggplot2.tidyverse.org/&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ggplot2&lt;/code&gt;&lt;/a&gt;… but wait, why not make it with R Markdown and 
-&lt;code class=&quot;highlighter-rouge&quot;&gt;ggplot2&lt;/code&gt;?”&lt;/p&gt;
+      <content type="html" xml:base="https://jlintusaari.github.io/2018/07/how-to-compile-rmarkdown-documents-using-docker/">&lt;p&gt;I got a request from my client to make a new sales report for the web
+shop that I had previously built for them.
+The client wanted a printable pdf that would extract sales information for a given month
+and represent them with figures and tables.
+After specifying all the details I came into a conclusion that it would make
+sense to implement the report using &lt;a href=&quot;https://www.r-project.org/&quot;&gt;R&lt;/a&gt;, which makes it easy to create good looking
+reports containing graphs and tables using R’s &lt;a href=&quot;https://rmarkdown.rstudio.com/&quot;&gt;Markdown&lt;/a&gt; and
+&lt;a href=&quot;https://ggplot2.tidyverse.org/&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ggplot2&lt;/code&gt;&lt;/a&gt; libraries.&lt;/p&gt;
 
-&lt;p&gt;This was actually a pefect case for it, since it needed to be printable pdf and come out once
-a month. So no need for &lt;a href=&quot;https://shiny.rstudio.com/&quot;&gt;shiny&lt;/a&gt; interactivity this time (no pun intended), just a formally looking 
-sales report with figures and tables in it. Let’s do it.&lt;/p&gt;
-
-&lt;p&gt;The first thing to think about was how to generate the pdf reports in the web server. 
-Generating pdf:s with R Markdown requires first of all R, but also &lt;a href=&quot;https://www.latex-project.org/&quot;&gt;LaTeX&lt;/a&gt; to be installed, and as you
-might guess, they were not available in the web server.
-An easy way to avoid having to install additional packages to a web server itself is to use Docker 
-containers that contain the required packages.&lt;/p&gt;
+&lt;p&gt;Generating pdf:s with R Markdown requires first of all R with a bunch of
+libraries, but also &lt;a href=&quot;https://www.latex-project.org/&quot;&gt;LaTeX&lt;/a&gt; for typesetting. Installation and maintenance of
+those installations in a web server is a bit tedious especially if you at some
+point need to migrate to another environment.
+An easy way to avoid these difficulties is to use Docker containers that contain
+the needed software, and are easy to maintain and move if a need be.&lt;/p&gt;
 
 &lt;h2 id=&quot;using-r-markdown-in-a-docker-container&quot;&gt;Using R Markdown in a Docker container&lt;/h2&gt;
 
-&lt;p&gt;As mentioned above, using a &lt;a href=&quot;https://www.docker.com/&quot;&gt;Docker&lt;/a&gt; container saves me from having to installing R, LaTeX and other 
-dependencies to the server itself. They don’t need to be maintained and I can easily deploy the 
+&lt;p&gt;As mentioned above, using a &lt;a href=&quot;https://www.docker.com/&quot;&gt;Docker&lt;/a&gt; container saves me from having to installing R, LaTeX and other
+dependencies to the server itself. They don’t need to be maintained and I can easily deploy the
 container to any other web server if a need arises.&lt;/p&gt;
 
 &lt;p&gt;I’m going to use &lt;code class=&quot;highlighter-rouge&quot;&gt;rocker/verse&lt;/code&gt; image from the &lt;a href=&quot;https://github.com/rocker-org/rocker&quot;&gt;rocker R images&lt;/a&gt; for creating the report.
@@ -67,30 +67,30 @@ If you are new to Docker, here is the &lt;a href=&quot;https://docs.docker.com/&
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker pull rocker/verse:3.5.1
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;First I’m going to test the image to see what R packages I possibly need to add to the image. 
-This image has also RStudio pre-installed in it, and it is configured to run the RStudio server by 
+&lt;p&gt;First I’m going to test the image to see what R packages I possibly need to add to the image.
+This image has also RStudio pre-installed in it, and it is configured to run the RStudio server by
 default.
 So for testing, running the following command will start RStudio in &lt;code class=&quot;highlighter-rouge&quot;&gt;localhost:8787&lt;/code&gt;:&lt;/p&gt;
 
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker run &lt;span class=&quot;nt&quot;&gt;--rm&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 8787:8787 rocker/verse:3.5.1
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;Once you type &lt;code class=&quot;highlighter-rouge&quot;&gt;localhost:8787&lt;/code&gt; to your browser, you will be asked for a username and password, 
+&lt;p&gt;Once you type &lt;code class=&quot;highlighter-rouge&quot;&gt;localhost:8787&lt;/code&gt; to your browser, you will be asked for a username and password,
 which are both &lt;code class=&quot;highlighter-rouge&quot;&gt;rstudio&lt;/code&gt; by default.
-To my happy surprise, all the packages that I needed were already installed so I could just 
+To my happy surprise, all the packages that I needed were already installed so I could just
 go ahead running the pdf compilation.&lt;/p&gt;
 
 &lt;h3 id=&quot;generating-the-pdf-with-docker&quot;&gt;Generating the pdf with Docker&lt;/h3&gt;
 
 &lt;p&gt;Let’s begin by compiling pdf reports with the &lt;code class=&quot;highlighter-rouge&quot;&gt;rocker/verse:3.5.1&lt;/code&gt; image.
-I have provided a &lt;a href=&quot;https://github.com/jlintusaari/R-docker-report&quot;&gt;git repository&lt;/a&gt; that contains example files for creating pdf reports 
-with R Markdown and Docker. 
+I have provided a &lt;a href=&quot;https://github.com/jlintusaari/R-docker-report&quot;&gt;git repository&lt;/a&gt; that contains example files for creating pdf reports
+with R Markdown and Docker.
 You can clone it to you computer by running&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git clone https://github.com/jlintusaari/R-docker-report.git
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;The repository contains an &lt;code class=&quot;highlighter-rouge&quot;&gt;example_report.R&lt;/code&gt; that takes as input a csv file and generates a pdf 
+&lt;p&gt;The repository contains an &lt;code class=&quot;highlighter-rouge&quot;&gt;example_report.R&lt;/code&gt; that takes as input a csv file and generates a pdf
 report using the &lt;code class=&quot;highlighter-rouge&quot;&gt;example_report.Rmd&lt;/code&gt; template below:&lt;/p&gt;
 
 &lt;div class=&quot;language-markdown highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;
@@ -112,12 +112,12 @@ ggplot(dt, aes(date, sales, color=city)) + geom_point() + geom_smooth()
 
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;The generated pdf looks like this:&lt;/p&gt;
+&lt;p&gt;The generated example pdf looks like this:&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;https://jlintusaari.github.io/img/r-docker-report/sales.png&quot; alt=&quot;Screenshot of the example report&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;The example csv data is stored in &lt;code class=&quot;highlighter-rouge&quot;&gt;data.csv&lt;/code&gt; file and was created with the &lt;code class=&quot;highlighter-rouge&quot;&gt;R/make_csv.R&lt;/code&gt; script.
-Assuming we are in the folder where the &lt;code class=&quot;highlighter-rouge&quot;&gt;example_report.R&lt;/code&gt; file is located, we run the following 
+Assuming we are in the folder where the &lt;code class=&quot;highlighter-rouge&quot;&gt;example_report.R&lt;/code&gt; file is located, we run the following
 command to compile the report with Docker:&lt;/p&gt;
 
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker run &lt;span class=&quot;nt&quot;&gt;--rm&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-v&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$PWD&lt;/span&gt;:/report &lt;span class=&quot;nt&quot;&gt;-w&lt;/span&gt; /report rocker/verse:3.5.1 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
@@ -129,14 +129,14 @@ command to compile the report with Docker:&lt;/p&gt;
 &lt;ol&gt;
   &lt;li&gt;The default user in the container is root, causing the generated pdf to be owned by root&lt;/li&gt;
   &lt;li&gt;The above command is rather long and requires setting e.g. the working directory with &lt;code class=&quot;highlighter-rouge&quot;&gt;-w&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;With my actual report, the latex system was missing some packages that were automatically installed 
+  &lt;li&gt;With my actual report, the latex system was missing some packages that were automatically installed
 but made the pdf compilation slow&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;p&gt;So let’s create a new Docker image based on &lt;code class=&quot;highlighter-rouge&quot;&gt;rocker/verse:3.5.1&lt;/code&gt; that is better configured for our 
-purposes. 
+&lt;p&gt;So let’s create a new Docker image based on &lt;code class=&quot;highlighter-rouge&quot;&gt;rocker/verse:3.5.1&lt;/code&gt; that is better configured for our
+purposes.
 We will do this using a &lt;a href=&quot;https://docs.docker.com/engine/reference/builder/&quot;&gt;Dockerfile&lt;/a&gt;.
-The following &lt;code class=&quot;highlighter-rouge&quot;&gt;Dockerfile&lt;/code&gt; starts the image creation from the &lt;code class=&quot;highlighter-rouge&quot;&gt;rocker/verse:3.5.1&lt;/code&gt; image and 
+The following &lt;code class=&quot;highlighter-rouge&quot;&gt;Dockerfile&lt;/code&gt; starts the image creation from the &lt;code class=&quot;highlighter-rouge&quot;&gt;rocker/verse:3.5.1&lt;/code&gt; image and
 adds configurations to address the above issues:&lt;/p&gt;
 
 &lt;div class=&quot;language-dockerfile highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; rocker/verse:3.5.1&lt;/span&gt;
@@ -156,39 +156,40 @@ adds configurations to address the above issues:&lt;/p&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;You can find this file from the &lt;code class=&quot;highlighter-rouge&quot;&gt;docker&lt;/code&gt; folder in the &lt;a href=&quot;https://github.com/jlintusaari/R-docker-report&quot;&gt;git repository&lt;/a&gt;.
-Now assuming you are in the &lt;code class=&quot;highlighter-rouge&quot;&gt;docker&lt;/code&gt; folder where the &lt;code class=&quot;highlighter-rouge&quot;&gt;Dockerfile&lt;/code&gt; is located, you can create the new image 
+Now assuming you are in the &lt;code class=&quot;highlighter-rouge&quot;&gt;docker&lt;/code&gt; folder where the &lt;code class=&quot;highlighter-rouge&quot;&gt;Dockerfile&lt;/code&gt; is located, you can create the new image
 with:&lt;/p&gt;
 
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker build &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; report-maker &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;After this we can use the &lt;code class=&quot;highlighter-rouge&quot;&gt;report-maker&lt;/code&gt; image to make the &lt;code class=&quot;highlighter-rouge&quot;&gt;pdf&lt;/code&gt; compilation both faster and more 
+&lt;p&gt;After this we can use the &lt;code class=&quot;highlighter-rouge&quot;&gt;report-maker&lt;/code&gt; image to make the &lt;code class=&quot;highlighter-rouge&quot;&gt;pdf&lt;/code&gt; compilation both faster and more
 convenient.
-The following command will create the report 
+The following command will create the report
 (remember to remove the root owned &lt;code class=&quot;highlighter-rouge&quot;&gt;example_report.pdf&lt;/code&gt; first if you haven’t):&lt;/p&gt;
 
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker run &lt;span class=&quot;nt&quot;&gt;--rm&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-v&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$PWD&lt;/span&gt;:/report report-maker
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;Of course our &lt;code class=&quot;highlighter-rouge&quot;&gt;report-maker&lt;/code&gt; image can be used to run any kind of R scripts, but the name is 
+&lt;p&gt;Of course our &lt;code class=&quot;highlighter-rouge&quot;&gt;report-maker&lt;/code&gt; image can be used to run any kind of R scripts, but the name is
 descriptive for our purpose.&lt;/p&gt;
 
 &lt;h2 id=&quot;production-use&quot;&gt;Production use&lt;/h2&gt;
 
-&lt;p&gt;The web application I’m deploying this for is implemented with &lt;a href=&quot;https://rubyonrails.org/&quot;&gt;Ruby on Rails&lt;/a&gt;.
-Rails provides an inbuilt task system that can easily access the database of the web-application to 
-retrieve relevant data for report creation.&lt;/p&gt;
+&lt;p&gt;The web shop that this report will be used in is implemented with &lt;a href=&quot;https://rubyonrails.org/&quot;&gt;Ruby on Rails&lt;/a&gt;.
+Rails provides an inbuilt task system that can easily access the database of the web-application to
+retrieve relevant data for the report creation.&lt;/p&gt;
 
-&lt;p&gt;In this particular case the pdf reports need to be generated once a month.
-I will thus create a rails task that:&lt;/p&gt;
+&lt;p&gt;For automating the whole report generation process, the easiest way is to create
+a rails task that:&lt;/p&gt;
 
 &lt;ol&gt;
   &lt;li&gt;Queries the database and saves the relevant information to a csv file&lt;/li&gt;
-  &lt;li&gt;Provides the generated csv file to the &lt;code class=&quot;highlighter-rouge&quot;&gt;report-maker&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Provides the generated csv file as an argument for the &lt;code class=&quot;highlighter-rouge&quot;&gt;report-maker&lt;/code&gt;&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;p&gt;After that I setup a &lt;a href=&quot;https://en.wikipedia.org/wiki/Cron&quot;&gt;cron job&lt;/a&gt; that runs the task the first day of every month.
-Once generated, the report is downloadable for the client through the web application.&lt;/p&gt;</content>
+&lt;p&gt;After that one can setup a &lt;a href=&quot;https://en.wikipedia.org/wiki/Cron&quot;&gt;cron job&lt;/a&gt; that runs the task e.g. the first
+day of every month. Once generated, the report can be made downloadable for the
+client from the web application.&lt;/p&gt;</content>
 
       
       
@@ -215,7 +216,7 @@ Once generated, the report is downloadable for the client through the web applic
       
 
       
-        <summary type="html">I do some freelance web programming and got a request from a client to make a new monthly sales report for their web shop. After specifying what should be in it, I thought to myself, “this would be so quick to make with R Markdown and ggplot2… but wait, why not make it with R Markdown and ggplot2?”</summary>
+        <summary type="html">I got a request from my client to make a new sales report for the web shop that I had previously built for them. The client wanted a printable pdf that would extract sales information for a given month and represent them with figures and tables. After specifying all the details I came into a conclusion that it would make sense to implement the report using R, which makes it easy to create good looking reports containing graphs and tables using R’s Markdown and ggplot2 libraries.</summary>
       
 
       
@@ -229,24 +230,24 @@ Once generated, the report is downloadable for the client through the web applic
   
     <entry>
       
-      <title type="html">Building a Boggle solver from scratch using Keras</title>
+      <title type="html">Building a Boggle solver using image processing and artificial neural networks</title>
       
       
-      <link href="https://jlintusaari.github.io/2018/06/building-boggle-solver/" rel="alternate" type="text/html" title="Building a Boggle solver from scratch using Keras" />
+      <link href="https://jlintusaari.github.io/2018/06/building-boggle-solver/" rel="alternate" type="text/html" title="Building a Boggle solver using image processing and artificial neural networks" />
       
       <published>2018-06-27T00:00:00+03:00</published>
       <updated>2018-06-27T00:00:00+03:00</updated>
       <id>https://jlintusaari.github.io/2018/06/building-boggle-solver</id>
       <content type="html" xml:base="https://jlintusaari.github.io/2018/06/building-boggle-solver/">&lt;p&gt;Boggle is a classical word searching game in a 4 x 4 grid of letter dice.
-The winner is determined based on how many words the player has found and the length of those words.
-We quite often play this game when visiting my parents. 
-The inspiration for this project came from an interest in knowing all the possible words in
-a given board.&lt;/p&gt;
+The winner is determined based on how many words the player has found and the length of those words.&lt;/p&gt;
+
+&lt;p&gt;We quite often play this game with my family and the inspiration for this project
+came from an interest in knowing all the possible words in a given board.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/img/boggle/boggle.jpg&quot; alt=&quot;A finnish boggle board&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;So I decided to write a program that automates this process.
-To make the program convenient to use, the input is will be just an image of the board.&lt;/p&gt;
+To make the program convenient to use, the input will be just an image of the board.&lt;/p&gt;
 
 &lt;h2 id=&quot;subproblems-to-solve&quot;&gt;Subproblems to solve&lt;/h2&gt;
 
@@ -257,35 +258,38 @@ To make the program convenient to use, the input is will be just an image of the
   &lt;li&gt;Find all the words&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;For the latter task, there exists pre-made solutions in GitHub (see e.g. &lt;a href=&quot;https://github.com/railto/boggle-solver&quot;&gt;here&lt;/a&gt;),
-that match sequences of letters from the game board to a dictionary file.
-This article considers the first task of extracting the letters and their locations from the image.&lt;/p&gt;
+&lt;p&gt;Here we will be considering the first task of extracting the letters and
+their locations from an image. Once the letters and their locations are known,
+the latter problem of finding all the words can be solved with an algorithm that searches through the
+board and matches strings against a dictionary.
+For this there exists even multiple pre-made solutions in GitHub (see e.g. &lt;a href=&quot;https://github.com/railto/boggle-solver&quot;&gt;here&lt;/a&gt;).&lt;/p&gt;
 
-&lt;p&gt;The biggest problem was to acquire a decent dataset. 
-I had decided to use artificial neural networks (ANN), and those tend to 
-require a decent amount of labeled training data. 
-I first thought of rendering boggle board images with a computer to learn locating the board 
-but came into a conclusion that making the renderer good enough to enable generalization to real data would 
-take too much time. 
-I decided to take a few photos of the board and use them to generate more training images.&lt;/p&gt;
+&lt;p&gt;Before we can start extracting the letters from an image, we need to be able to locate the board.
+I first thought of rendering boggle board images with a computer and then use artificial neural networks (ANN) to learn locating the board.
+However I quickly came into a conclusion that making the renderer realistic enough to generalize to real word images would
+take too much time.
+I decided to take a few photos of the board and use traditional image processing
+techniques for the location, and then use ANN for only letter classification.&lt;/p&gt;
 
-&lt;p&gt;Next time when I visited my parents, I took eight images of our game board with all the 
+&lt;p&gt;My training data set would be eight images of the game board with all the
 different die faces visible.&lt;/p&gt;
 
 &lt;h2 id=&quot;locating-the-board&quot;&gt;Locating the board&lt;/h2&gt;
 
-&lt;p&gt;Given the shortage of the training data, I decided to use traditional image processing techniques to 
-first locate the board in the image. 
-Once located, it would be easy to extract the individual letter images from it due to the symmetry of the board.
-Then I would only need to train a rather simple classifier to extract the letters on the dice.&lt;/p&gt;
+&lt;p&gt;The benefit of traditional image processing techniques is that they apply to
+situations where there is little data available like in my case.
+The idea is to apply different image transformations to the original image that
+make it recognizable for the computer.
+Once the board would be located, it would be easy to extract the individual letter images from it due to the symmetry of the board.
+Then the last step would be to train a rather simple classifier to classify the letters on the dice.&lt;/p&gt;
 
 &lt;p&gt;I had not done much image processing before but found a blog entry describing &lt;a href=&quot;http://sudokugrab.blogspot.fi/2009/07/how-does-it-all-work.html&quot;&gt;Sudoku grab&lt;/a&gt;
-quite useful. 
+quite useful.
 After some experimentation I arrived at the following approach for locating the Boggle board:&lt;/p&gt;
 
 &lt;ol&gt;
-  &lt;li&gt;Assume an image of a Boggle board taken from above (possibly with some other objects, e.g. a hand).&lt;/li&gt;
-  &lt;li&gt;Assume dice have a white background. Threshold the image to find all whitish blobs in it.&lt;/li&gt;
+  &lt;li&gt;Assume an image of a Boggle board taken from above (possibly with some noise like other objects, e.g. a hand).&lt;/li&gt;
+  &lt;li&gt;Assume dice have a solid background (white in my case). Threshold the image to find all whitish blobs in it.&lt;/li&gt;
   &lt;li&gt;Do outlier detection to determine what blobs are actually dice among the white blobs. Remove the others.&lt;/li&gt;
   &lt;li&gt;Dilate the blobs until there is just one blob.&lt;/li&gt;
   &lt;li&gt;This blob should now be basically the board. Find the minimal enclosing rectangle.&lt;/li&gt;
@@ -297,72 +301,79 @@ After some experimentation I arrived at the following approach for locating the 
 
 &lt;p&gt;&lt;img src=&quot;/img/boggle/board-capturing_9_0.png&quot; alt=&quot;Image processing steps&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;The outlier detection in step three worked surprisingly well. 
+&lt;p&gt;The outlier detection in step three worked surprisingly well.
 I added it after I noticed that the thresholding alone was too unreliable.
-The image had to basically contain just the Boggle board and not much else. 
-With the outlier detection, however, even having a hand, a sheet of paper, or even 
-light reflection from the table didn’t confuse the program. 
-I used three features for the outlier detection, the size of the blob, the blob location and the 
+The image had to basically contain just the Boggle board and not much else.
+With the outlier detection, however, even having a hand, a sheet of paper, or even reflection from the table didn’t confuse the program.
+I used three features for the outlier detection, the size of the blob, the blob location and the
 blob’s minimum bounding rectangle width in proportion to its height.&lt;/p&gt;
 
-&lt;p&gt;After extraction of the features the program locates 24 largest white blobs in the image, 
-and assumes that 16 of them are dice (as there are 16 dice). 
+&lt;p&gt;After extraction of the features the program locates 24 largest white blobs in the image,
+and assumes that 16 of them are dice (as there are 16 dice).
 The remaining eight blobs are “outliers” to be removed, e.g. a white sheet of paper next to the game board.
-Because the blobs corresponding to the 16 dice should have very similar blob feature values, the 
-outlier detection algorithm should be able to label the other white blobs as outliers. 
-The outlier detection algorithm I used was the &lt;a href=&quot;http://scikit-learn.org/stable/modules/generated/sklearn.covariance.EllipticEnvelope.html&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;EllipticEnvelope&lt;/code&gt;&lt;/a&gt; 
+Because the blobs corresponding to the 16 dice should have very similar blob feature values, the
+outlier detection algorithm should be able to label the other white blobs as outliers.
+The outlier detection algorithm I used was the &lt;a href=&quot;http://scikit-learn.org/stable/modules/generated/sklearn.covariance.EllipticEnvelope.html&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;EllipticEnvelope&lt;/code&gt;&lt;/a&gt;
 from Python’s &lt;a href=&quot;http://scikit-learn.org/stable/index.html&quot;&gt;scikit-learn&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;Below is another illustration of the process for another image:&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/img/boggle/board-capturing_7_0.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;This process makes errors occasionally in bad lighting conditions because of the thresholding.
-However, most of the time it works well and the solution was sufficient for me for my purposes.
-The actual implementation used &lt;code class=&quot;highlighter-rouge&quot;&gt;scipy.ndimage&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;OpenCV&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;NumPy&lt;/code&gt; Python libraries.&lt;/p&gt;
+&lt;p&gt;This process worked surprisingly well in practice.
+You can make it fail with bad lighting conditions because of the white
+thresholding but in normal circumstances it was fairly robust.
+For the actual implementation I used &lt;code class=&quot;highlighter-rouge&quot;&gt;scipy.ndimage&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;OpenCV&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;NumPy&lt;/code&gt; Python libraries.&lt;/p&gt;
 
 &lt;h2 id=&quot;generating-a-training-dataset&quot;&gt;Generating a training dataset&lt;/h2&gt;
 
 &lt;p&gt;As the location of the board is now known, the remaining task is to classify the letters in the dice.
 I decided to use artificial neural network (ANN) classifier for this task.
-I first tried to find ready made letter datasets, and found some, but they were for the english alphabet. 
-That meant that I would anyway have to add the Ö, Ä letters to the dataset as 
+I first tried to find ready made letter datasets, and found some, but they were for the english alphabet.
+That meant that I would anyway have to add the Ö, Ä letters to the dataset as
 well as the combined FG and BC letter dice from the finnish Boggle version.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/img/boggle/accented.jpg&quot; alt=&quot;Finnish boggle dice&quot; style=&quot;width: 200px;&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;Consequently, I decided to use six out of the eight of the previously taken images of the board to generate 
-more training images by using random distortions. 
-The six game board images each had 16 dice in them that gave me an initial set of 6 * 16 = 96 
+&lt;p&gt;Consequently, I decided to use six out of the eight of the previously taken images of the board to generate
+more training images by using random distortions.
+Adding distortions simulates the noise and variation present in real world images and makes
+the classification model robust against them, i.e. preventing overfitting to
+the original training data.
+The six game board images each had 16 dice in them that gave me an initial set of 6 * 16 = 96
 images of a die containing all the different sides of the dice in the game.
 First I labeled the die images by hand.
-To increase the size of my dataset, I took a blurred and sharpened version of the 6 
+To increase the size of my dataset, I took a blurred and sharpened version of the 6
 original images to bring my dataset size to 96 * 3 = 288 labeled images of Boggle letters.&lt;/p&gt;
 
 &lt;p&gt;I decided to cast the dice images to black and white 64 x 64 pixel images for classification.
-After this I made a function that would add random noise (salt and pepper), shifts, and rotations to 
-the images. 
-Below you can see some of the original 288 black and white letter images on the left hand side and the result of the 
+In this case the colour information does not carry any essential information with respect to
+classifying the letters.
+By removing the colours I can substantially reduce the dimensionality of the data
+while retaining all the crucial information, which helps to make the classification robust as the model does not need to learn how to handle the colors.
+After this I made a function that would add random noise (salt and pepper), shifts, and rotations to
+the images.
+Below you can see some of the original 288 black and white letter images on the left hand side and the result of the
 random noising on the right hand side.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/img/boggle/creating-dataset_8_0.png&quot; alt=&quot;Preprocessed letter images&quot; style=&quot;width: 300px;&quot; /&gt;
 &lt;img src=&quot;/img/boggle/creating-dataset_11_0.png&quot; alt=&quot;Preprocessed and noised letter images&quot; style=&quot;width: 300px;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;I would use these randomly noised images to train my classifier.
-Because the distribution of the letters was not uniform (e.g. there were many more A:s compared to 
+Because the distribution of the letters was not uniform (e.g. there were many more A:s compared to
 e.g. Y:s) I sampled them with weights to have an uniform probability for a letter appearing in a random
 sample.&lt;/p&gt;
 
 &lt;p&gt;I was now ready to train the ANN with a sort of an unlimited supply of training letter images and
-hoped that the above steps would be enough for the classifier to generalize to unseen images 
+hoped that the above steps would be enough for the classifier to generalize to unseen images
 given the tiny initial set of training images.&lt;/p&gt;
 
 &lt;h2 id=&quot;training-the-ann&quot;&gt;Training the ANN&lt;/h2&gt;
 
-&lt;p&gt;I used &lt;a href=&quot;https://keras.io/&quot;&gt;Keras&lt;/a&gt; with the &lt;a href=&quot;https://www.tensorflow.org/&quot;&gt;TensorFlow&lt;/a&gt; backend to 
-implement the ANN model. 
-I decided to start with the basic one hidden layer setup with relu activation and a categorical loss. 
-Because the training data are rather heavily preprocessed black and white images of letters, I 
+&lt;p&gt;I used &lt;a href=&quot;https://keras.io/&quot;&gt;Keras&lt;/a&gt; with the &lt;a href=&quot;https://www.tensorflow.org/&quot;&gt;TensorFlow&lt;/a&gt; backend to
+implement the ANN model.
+I decided to start with the basic one hidden layer setup with relu activation and a categorical loss.
+Because the training data are rather heavily preprocessed black and white images of letters, I
 anticipated that this ANN structure would already yield a decent performance.&lt;/p&gt;
 
 &lt;p&gt;Below is the Keras code of the ANN model with a hidden layer size of 192.&lt;/p&gt;
@@ -383,15 +394,17 @@ anticipated that this ANN structure would already yield a decent performance.&lt
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;I used random batches of 1000 noised letters in training the classifier.
-Using the original 288 letters training set (without random noising) as a validation set I 
-reached over 80%  accuracy after just some tens of thousands of iterations. 
-After a few hundred thousands more I reached 100% accuracy, i.e. my model at least had nicely 
-(over)fitted to the original training dataset.&lt;/p&gt;
+Using the original 288 letters training set (without random noising) as a validation set I
+reached over 80%  accuracy after just some tens of thousands of iterations.
+After a few hundred thousands more I reached 100% accuracy, i.e. my model at least had nicely
+(over)fitted to the original training dataset.
+This of course is not yet any guarantee of it’s generalization to unsees images
+but shows that the training process is working.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/img/boggle/training-classifier_17_0.png&quot; alt=&quot;28 original images&quot; style=&quot;width: 300px; float: right;&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;I then took a look at the ANN hidden layer weights which seemed to had formed rather reasonable 
-looking shapes for detecting letters in different 90 degree rotations. 
+&lt;p&gt;I then took a look at the ANN hidden layer weights which seemed to had formed rather reasonable
+looking shapes for detecting letters in different 90 degree rotations.
 The image on the right shows the first 20 out of the 192 hidden layer node weight maps arranged such that there are four maps on each row.&lt;/p&gt;
 
 &lt;p&gt;I then tried the classifier on a batch of 1000 randomly noised images.
@@ -399,13 +412,13 @@ The accuracy was roughly 98%, i.e. around 20 misclassified letters per batch.
 For the boggle solver to be practical, the accuracy would have to be higher than that.
 That is because if even one letter is misclassified on the board, it will cause the program to
 find wrong words from the board.
-It would be frustrating to have to repeatedly retake images because of misclassifications.&lt;/p&gt;
+It would be frustrating to have to repeatedly retake images because of few letters being misclassified.&lt;/p&gt;
 
-&lt;p&gt;I decided to let it train 32M letters overnight (using CPU only) and see if the accuracy would 
-improve. 
+&lt;p&gt;I decided to let it train 32M letters overnight (using CPU only) and see if the accuracy would
+improve.
 On the next morning the performance was mostly 100% percent for batches of 1000 randomly noised
 letter images.
-Since the perfomance could not really be meaningfully improved, I decided not to develop the model 
+Since the perfomance could not really be meaningfully improved, I decided not to develop the model
 further with e.g. convolutional layers.&lt;/p&gt;
 
 &lt;h3 id=&quot;examples-of-missclassifications&quot;&gt;Examples of missclassifications&lt;/h3&gt;
@@ -413,10 +426,10 @@ further with e.g. convolutional layers.&lt;/p&gt;
 &lt;p&gt;On rare occasions a single letter would was missclassified in the batches of 1000 noised images.
 I wasn’t too worried of it because the random shifts and noising can sometimes generate extreme outcomes.
 To be sure I nevertheless checked what was going on.
-Below are a couple of examples of misclassified randomly noised images. 
-The first one was classified as “S” while it should have been an “M” and the second one was 
-classified as “A” but should have been an “Ä”. 
-You can’t blame the ANN from the second one though: the random shift pushed the dots outside of the 
+Below are a couple of examples of misclassified randomly noised images.
+The first one was classified as “S” while it should have been an “M” and the second one was
+classified as “A” but should have been an “Ä”.
+You can’t blame the ANN from the second one though: the random shift pushed the dots in “Ä” outside of the
 image.
 The first one is also rather unprobable in practice, since the letter is so close to the edge.&lt;/p&gt;
 
@@ -425,30 +438,32 @@ The first one is also rather unprobable in practice, since the letter is so clos
 
 &lt;h2 id=&quot;testing-the-solver&quot;&gt;Testing the solver&lt;/h2&gt;
 
-&lt;p&gt;I had left out two images from the training set to serve as a test set. 
+&lt;p&gt;I had left out two images from the training set to serve as a test set.
 So I had a total of 2 * 16 = 32 images of letters for the test set – not too many but that would have to do.&lt;/p&gt;
 
-&lt;p&gt;Evaluating the model with the 32 unseen letter images gave a 100% accuracy with a very small loss.
-This was encouraging, but due to the minuscule size of the test set, it would really need to be 
+&lt;p&gt;Evaluating the model with the 32 unseen letter images gave a 100% accuracy with a very small loss,
+meaning that the classifications were seen as rather certain by the model.
+This was encouraging, but due to the minuscule size of the test set, it would really need to be
 tested in practice.&lt;/p&gt;
 
-&lt;p&gt;When testing the first time in practice, it turned out that the lighting condition in the original 8 images
-was too alike (they were taken in sunny day) and the thresholding process failed quite often.
-This meant that the program was not able to locate the board nor do the black and white transform reliably 
-with new images.
+&lt;p&gt;When testing the whole process from image processing to the letter classification the first time while playing the game, it turned out that the lighting condition in the original 8 images
+was too alike (they were taken in a sunny day) and the thresholding in the image processing phase failed quite often.
+This meant that the program was not able to locate the board nor do the black and white transform reliably
+with unseen images.
 I had to tune the thresholding process in the image processing part a bit to make it more robust.
-After a few iterations and using adaptive thresholds I got it working well with images in different lighting conditions.
-The ANN classifier did not undergo any changes and performed surprisingly well with the 
+After a few iterations and using adaptive thresholds I got it working well with images in different lighting conditions.&lt;/p&gt;
+
+&lt;p&gt;On the other hand, the ANN classifier did not undergo any changes and performed surprisingly well with the
 black and white images right from the beginning.
-The problem setup for the classifier was simple enough and the letter noising sufficient for allowing the classifier to 
+The problem setup for the classifier was simple enough and the letter noising sufficient for allowing the classifier to
 generalize to unseen letter images.&lt;/p&gt;
 
-&lt;p&gt;The complete Boggle solver can be tried online &lt;a href=&quot;http://kevea.fi:8000&quot;&gt;here&lt;/a&gt;. 
+&lt;p&gt;The complete Boggle solver can be tried online &lt;a href=&quot;http://kevea.fi:8000&quot;&gt;here&lt;/a&gt;.
 The web interface would benefit from a bit more work as it is quickly put together for my family’s Boggle games.
-Notice that in order to work, the images must conform to the assumptions made above, such as that the
+It should be noticed, that in order to work, the images must conform to the assumptions made above, such as that the
 image must be taken from above the board and the dice must have a white background.
-It has not been tested with other boggle boards besides the one that my parents own (see the image in the beginning of this post), and 
-different type faces can potentially cause trouble. 
+It has not been tested with other boggle boards besides the one that my parents own (see the image in the beginning of this post), and
+different type faces can potentially cause trouble.
 It won’t recognize letters that are not present in the dice set of the finnish Boggle version, such
 as B or C. Also for now, the words found will be in finnish ;)
 However, we have successfully used and enjoyed it in our Boggle games!&lt;/p&gt;</content>
@@ -478,7 +493,7 @@ However, we have successfully used and enjoyed it in our Boggle games!&lt;/p&gt;
       
 
       
-        <summary type="html">Boggle is a classical word searching game in a 4 x 4 grid of letter dice. The winner is determined based on how many words the player has found and the length of those words. We quite often play this game when visiting my parents. The inspiration for this project came from an interest in knowing all the possible words in a given board.</summary>
+        <summary type="html">Boggle is a classical word searching game in a 4 x 4 grid of letter dice. The winner is determined based on how many words the player has found and the length of those words.</summary>
       
 
       
