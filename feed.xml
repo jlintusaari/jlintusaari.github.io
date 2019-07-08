@@ -5,7 +5,7 @@
   
   <link href="https://jlintusaari.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://jlintusaari.github.io/" rel="alternate" type="text/html" />
-  <updated>2019-07-08T14:48:18+03:00</updated>
+  <updated>2019-07-08T16:08:23+03:00</updated>
   <id>https://jlintusaari.github.io//</id>
 
   
@@ -36,7 +36,7 @@
       <published>2018-08-06T14:50:00+03:00</published>
       <updated>2018-08-06T14:50:00+03:00</updated>
       <id>https://jlintusaari.github.io/2018/07/how-to-compile-rmarkdown-documents-using-docker</id>
-      <content type="html" xml:base="https://jlintusaari.github.io/2018/07/how-to-compile-rmarkdown-documents-using-docker/">&lt;p&gt;I got a request from my client to make a new sales report for the web
+      <content type="html" xml:base="https://jlintusaari.github.io/2018/07/how-to-compile-rmarkdown-documents-using-docker/">&lt;p&gt;I got a request from a client to make a new sales report for the web
 shop that I had previously built for them.
 The client wanted a printable pdf that would extract sales information for a given month
 and represent them with figures and tables.
@@ -50,7 +50,7 @@ libraries, but also &lt;a href=&quot;https://www.latex-project.org/&quot;&gt;LaT
 those installations in a web server is a bit tedious especially if you at some
 point need to migrate to another environment.
 An easy way to avoid these difficulties is to use Docker containers that contain
-the needed software, and are easy to maintain and move if a need be.&lt;/p&gt;
+the needed software and are easy to maintain and move if a need be.&lt;/p&gt;
 
 &lt;h2 id=&quot;using-r-markdown-in-a-docker-container&quot;&gt;Using R Markdown in a Docker container&lt;/h2&gt;
 
@@ -216,7 +216,7 @@ client from the web application.&lt;/p&gt;</content>
       
 
       
-        <summary type="html">I got a request from my client to make a new sales report for the web shop that I had previously built for them. The client wanted a printable pdf that would extract sales information for a given month and represent them with figures and tables. After specifying all the details I came into a conclusion that it would make sense to implement the report using R, which makes it easy to create good looking reports containing graphs and tables using R’s Markdown and ggplot2 libraries.</summary>
+        <summary type="html">I got a request from a client to make a new sales report for the web shop that I had previously built for them. The client wanted a printable pdf that would extract sales information for a given month and represent them with figures and tables. After specifying all the details I came into a conclusion that it would make sense to implement the report using R, which makes it easy to create good looking reports containing graphs and tables using R’s Markdown and ggplot2 libraries.</summary>
       
 
       
